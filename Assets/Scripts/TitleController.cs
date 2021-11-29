@@ -1,4 +1,6 @@
 using ProjectW.Define;
+using ProjectW.Dummy;
+using ProjectW.Network;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -60,7 +62,8 @@ namespace ProjectW
                     LoadComplete = true;
                     break;
                 case IntroPhase.Server:
-
+                    DummyServer.Instance.Initialize();
+                    ServerManager.Instance.Initialize();
                     LoadComplete = true;
                     break;
                 case IntroPhase.StaticData:

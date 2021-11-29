@@ -6,12 +6,12 @@ namespace ProjectW.Define
     /// <summary>
     /// 게임에서 사용되는 씬 종류
     /// </summary>
-    public enum SceneType { Title,Ingame,Loading,}
+    public enum SceneType { Title, Ingame, Loading, }
 
     /// <summary>
     /// 타이틀 씬에서 순차적으로 수행할 작업을 열거
     /// </summary>
-    public enum IntroPhase 
+    public enum IntroPhase
     {
         Start, //시작
         ApplicationSetting, // 앱 세팅
@@ -21,5 +21,23 @@ namespace ProjectW.Define
         Resource, // 리소스 로드
         UI, // UI 매니저 초기화
         Comepelte, // 완료
+    }
+
+    public class Actor
+    {
+        /// <summary>
+        /// 액터의 타입
+        /// </summary>
+        public enum Type { Character, Monster, }
+
+        /// <summary>
+        /// 액터의 상태
+        /// </summary>
+        public enum State { Idle, Walk, Jump, Attack, Dead, }
+
+        /// <summary>
+        /// 액터의 일반공격 타입
+        /// </summary>
+        public enum AttackType { Normal, Projectile, }
     }
 }

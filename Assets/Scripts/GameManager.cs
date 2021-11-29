@@ -11,6 +11,11 @@ namespace ProjectW
     public class GameManager : Singleton<GameManager>
     {
         /// <summary>
+        /// 해당 필드 true라면 더미서버를 사용
+        /// </summary>
+        public bool useDummyServer;
+
+        /// <summary>
         /// 앱 기본 설정
         /// </summary>
         public void OnApplicationSetting()

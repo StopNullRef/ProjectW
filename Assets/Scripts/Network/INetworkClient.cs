@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace PorjectW.Network
+namespace ProjectW.Network
 {
     /// <summary>
     /// 서버와 통시하는 프로토콜 메서드를 갖는 인터페이스
