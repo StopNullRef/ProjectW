@@ -40,4 +40,12 @@ namespace ProjectW.Define
         /// </summary>
         public enum AttackType { Normal, Projectile, }
     }
+
+    public class StaticData
+    {
+        public const string SDPath = "Assets/StaticData";
+        public const string SDExcelPath = "Assets/StaticData/Excel";
+        public const string SDJsonPath = "Assets/StaticData/Json";
+    }
+
 }
