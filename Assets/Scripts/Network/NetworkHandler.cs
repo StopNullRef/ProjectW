@@ -7,7 +7,7 @@ namespace ProjectW.Network
 {
     /// <summary>
     /// 통신에  사용되는 모든 데이터셋의 베이스 클래스
-    /// Dto -> data transform object
+    /// Dto -> data transfer object
     /// </summary>
     [Serializable]
     public class DtoBase
@@ -68,7 +68,7 @@ namespace ProjectW.Network
                 return;
 
             // json을 임의의 T 타입으로 변환
-            data = SerilizationUtil.JsonToObject<T>(response);
+            data = SerializationUtil.JsonToObject<T>(response);
 
             // 에러코드가 존재하는지 체크
             if (data.errorCode > 0)

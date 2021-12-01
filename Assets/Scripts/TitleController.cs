@@ -47,6 +47,14 @@ namespace ProjectW
         private IntroPhase introPhase = IntroPhase.Start;
 
         /// <summary>
+        /// 타이틀 컨트롤러 초기화
+        /// </summary>
+        public void Initialize()
+        {
+            OnPhase(introPhase);
+        }
+
+        /// <summary>
         /// 현재 페이즈에 대한 로직 실행
         /// </summary>
         /// <param name="phase">진행 시키고자 하는 현재 페이즈</param>
@@ -67,11 +75,11 @@ namespace ProjectW
                     LoadComplete = true;
                     break;
                 case IntroPhase.StaticData:
-
+                    GameManager.SD.Initialize();
                     LoadComplete = true;
                     break;
                 case IntroPhase.UserData:
-
+                    new LoginHandler().Connect();
                     LoadComplete = true;
                     break;
                 case IntroPhase.Resource:
@@ -94,7 +102,8 @@ namespace ProjectW
         /// </summary>
         private void NextPhase()
         {
-
+            loadComplete = false;
+            OnPhase(++introPhase);
         }
 
     }

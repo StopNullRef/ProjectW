@@ -1,0 +1,33 @@
+﻿[
+  {
+    "index": 1000,
+    "name": "첫 사냥",
+    "questType": "Hunt",
+    "antecedentQuest": [
+      0
+    ],
+    "target": [
+      1000,
+      1001,
+      1002
+    ],
+    "targetDetail": [
+      1,
+      1,
+      1
+    ],
+    "rewardItems": [
+      1000,
+      1001
+    ],
+    "rewardItemsCount": [
+      1,
+      1
+    ],
+    "speechRef": [
+      20000,
+      20001
+    ],
+    "description": 30000
+  }
+]

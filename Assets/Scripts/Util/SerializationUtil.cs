@@ -13,7 +13,7 @@ namespace ProjectW.Util
     /// 일반적으로 JsonUtility를 사용하지 않고, 외부 라이브러리 중에 LitJson, NewtonsoftJson을
     /// 주로 많이 사용함... 저희는 그 중에 NewtonsoftJson을 사용
     /// </summary>
-    public static class SerilizationUtil
+    public static class SerializationUtil
     {
         /// <summary>
         /// 파라미터로 받은 json을 지정한 T타입으로 역직렬화하여 반환

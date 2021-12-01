@@ -16,7 +16,9 @@ namespace ProjectW.Editor
         public static void Import(string[] importedAssets, string[] deletedAssets,
             string[] movedAssets, string[] movedFromAssetsPaths)
         {
-
+            ImportNewOrModified(importedAssets);
+            Delete(deletedAssets);
+            Move(movedAssets, movedFromAssetsPaths);
         }
 
         /// <summary>
@@ -25,7 +27,7 @@ namespace ProjectW.Editor
         /// <param name="deletedAssets">삭제할 에셋 정보</param>
         private static void Delete(string[] deletedAssets)
         {
-
+            ExcelToJson(deletedAssets, true);
         }
 
         /// <summary>
@@ -47,7 +49,7 @@ namespace ProjectW.Editor
         /// <param name="importedAssets">임포트하거나 수정한 에셋 정보</param>
         private static void ImportNewOrModified(string[] importedAssets)
         {
-
+            ExcelToJson(importedAssets, false);
         }
 
         /// <summary>
@@ -86,6 +88,13 @@ namespace ProjectW.Editor
 
                     // 변환을 위해 Json Converter 객체를 생성
                     var excelToJsonConvert = new ExcelToJsonConvert(fileFullPath, $"{rootPath}/{Define.StaticData.SDJsonPath}");
+
+                    // 변환 실행 및 결과를 반환받아 성공했는지 확인
+                    if(excelToJsonConvert.SaveJsonFiles() > 0)
+                    {
+                        AssetDatabase.ImportAsset($"{Define.StaticData.SDJsonPath}/{fileName}.json");
+                        Debug.Log($"##### StaticData {fileName} reimported");
+                    }
                 }
                 catch (Exception e)
                 {

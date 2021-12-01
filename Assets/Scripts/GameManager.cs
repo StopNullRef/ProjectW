@@ -1,3 +1,4 @@
+using ProjectW.SD;
 using ProjectW.Util;
 using System.Collections.Generic;
 using UnityEngine;
@@ -14,6 +15,19 @@ namespace ProjectW
         /// 해당 필드 true라면 더미서버를 사용
         /// </summary>
         public bool useDummyServer;
+
+        /// <summary>
+        /// 기획 데이터를 갖는 객체
+        /// </summary>
+        [SerializeField]
+        private StaticDataModule sd = new StaticDataModule();
+        public static StaticDataModule SD => Instance.sd;
+
+        private void Start()
+        {
+            var titleController = FindObjectOfType<TitleController>();
+            titleController?.Initialize();
+        }
 
         /// <summary>
         /// 앱 기본 설정
