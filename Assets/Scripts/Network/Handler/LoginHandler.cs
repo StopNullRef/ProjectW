@@ -31,7 +31,9 @@ namespace ProjectW.Network
         /// <param name="dtoAccount">서버에서 보내준 계정 정보</param>
         public void GetAccountSuccess(DtoAccount dtoAccount)
         {
-
+            // 서버에서 받은 dto 데이터를 bo 데이터로 변환 후
+            // 게임매니저의 모든 bo 데이터 관리 객체가 들고 있게 한다.
+            GameManager.User.boAccount = new BoAccount(dtoAccount);
         }
 
         /// <summary>

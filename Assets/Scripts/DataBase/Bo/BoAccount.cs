@@ -14,7 +14,7 @@ namespace ProjectW.DB
     // 가공을 거침.. 이때 가공된 데이터를 Bo (Business object)라고 표현
     // -> 반대로 서버에 데이터를 보낼 때도, Bo를 바로 보내는 것이 아닌 Bo -> Dto로 변환하여 보냄
 
-
+    [Serializable]
     public class BoAccount
     {
         public string nickname;

@@ -152,6 +152,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 97617d59581d7fe459904199f4d9729f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  userData: {fileID: 11400000, guid: 628a5f68c9778454b8e3b175517bf07a, type: 2}
 --- !u!4 &139758465
 Transform:
   m_ObjectHideFlags: 0
@@ -159,12 +160,12 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 139758463}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 507.8405, y: 123.92151, z: -81.895874}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
-  m_Father: {fileID: 0}
-  m_RootOrder: 7
+  m_Father: {fileID: 2021034340}
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &144139528
 GameObject:
@@ -729,6 +730,7 @@ GameObject:
   - component: {fileID: 1326164609}
   - component: {fileID: 1326164608}
   - component: {fileID: 1326164607}
+  - component: {fileID: 1326164611}
   m_Layer: 5
   m_Name: UICanvas
   m_TagString: Untagged
@@ -818,6 +820,20 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 0}
+--- !u!114 &1326164611
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1326164606}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d362c3dd1886e854891ac85beecbea74, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  loadStateDesc: {fileID: 1509276322}
+  loadFillGauge: {fileID: 413233436}
 --- !u!1 &1329681689
 GameObject:
   m_ObjectHideFlags: 0
@@ -1088,6 +1104,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 54ea5edea3412824997623ea50e0ab66, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  uiTitle: {fileID: 1326164611}
 --- !u!1 &2021034339
 GameObject:
   m_ObjectHideFlags: 0
@@ -1117,6 +1134,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 144139529}
+  - {fileID: 139758465}
   m_Father: {fileID: 0}
   m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -1133,5 +1151,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   useDummyServer: 1
+  boUser:
+    boAccount:
+      nickname: 
+      gold: 0
   sd:
     sdCharacters: []

@@ -12,8 +12,14 @@ namespace ProjectW.Network
     [Serializable]
     public class DtoBase
     {
+        // 직접 작성하는 값이 아니라 통신 결과에 따라 채워지는 데이터이므로
+        // 인스펙터에 노출되지 않도록 HideInInspector 명령어로 숨긴다.
+
+        [HideInInspector]
         // 통신 결과에 대한 에러코드
         public int errorCode;
+
+        [HideInInspector]
         // 에러에 대한 내용
         public string errorMessage;
 
