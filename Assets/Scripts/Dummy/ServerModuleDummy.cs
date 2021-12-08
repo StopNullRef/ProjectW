@@ -11,6 +11,7 @@ namespace ProjectW.Dummy
     /// </summary>
     public class ServerModuleDummy : INetworkClient
     {
+
         /// <summary>
         /// 더미서버에서는 로그인 요청 메서드를 어떤식으로 처리할 것인지를 구현
         /// </summary>
@@ -22,6 +23,21 @@ namespace ProjectW.Dummy
             // 한마디로 통신 요청에 대한 실패가 발생할 일이 일반적으로 없음
             // 강제로 요청 성공 메서드를 실행시킴
             responseHandler.HandleSuccess(SerializationUtil.ToJSon(DummyServer.Instance.userData.dtoAccount));
+        }
+
+        /// <summary>
+        /// 서버에 유저가 마지막으로 존재했던 스테이지 정보를 요청하는 메서드
+        /// </summary>
+        /// <param name="uniqueId"></param>
+        /// <param name="responseHandler"></param>
+        public void GetStage(int uniqueId, ResponseHandler<DtoStage> responseHandler)
+        {
+            responseHandler.HandleSuccess(SerializationUtil.ToJSon(DummyServer.Instance.userData.dtoStage));
+        }
+
+        public void GetCharacter(int uniqueId, ResponseHandler<DtoCharacter> responseHandler)
+        {
+            responseHandler.HandleSuccess(SerializationUtil.ToJSon(DummyServer.Instance.userData.dtoCharacter));
         }
     }
 }

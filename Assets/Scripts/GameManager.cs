@@ -128,10 +128,37 @@ namespace ProjectW
                 // 실제 씬 로드를 진행시키며, 씬 로드 진행을 loadProgress로 나타냄
 
                 // 비동기로 로드한 씬이 활성화가 완료되지 않았다면 특정 작업을반복
-/*                while()
+                while (!asyncOper.isDone)
                 {
+                    // isDone 이 false라면 씬이 아직 로드가 끝나지 않은 상태
+                    // 그럼 이때 현재 로드 상황을 loadProgress로 나타낸다.
+                    if(loadProgress >= 0.9f)
+                    {
+                        loadProgress = 1f;
 
-                }*/
+                        // 로딩바가 마지막까지 차는 것을 확인하기 위해 1초정도 대기
+                        yield return new WaitForSeconds(1f);
+
+                        // 변경하고자하는 씬을 다시 활성화
+                        // isDone은 씬이 활성상태가 아니라면 progress가 1이 되어도
+                        // true가 안됨
+                        asyncOper.allowSceneActivation = true;
+                    }
+
+                    loadProgress = asyncOper.progress;
+
+                    // 코루틴 내에서 반복문 사용 시 로직을 한 번 실행 후, 코루틴을 탈출하여
+                    // 메인 로직을  실행할 수 있게 yield return을 사용
+                    yield return null;
+                }
+
+                // 위에 반복작업이 다 끝난 후에 아래로직 실행
+
+                // 로딩씬에서 다음 씬에 필요한 작업을 전부 수행했으므로 로딩씬을 다시 비활성화 시킴
+                yield return SceneManager.UnloadSceneAsync(SceneType.Loading.ToString());
+
+                // 모든 작업이 완료되었으므로 모든 작업 완료 후 실행시킬 로직이 있다면 실행
+                loadComplete?.Invoke();
             }
 
         }

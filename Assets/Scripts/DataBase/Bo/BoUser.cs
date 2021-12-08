@@ -13,5 +13,7 @@ namespace ProjectW.DB
     public class BoUser
     {
         public BoAccount boAccount;
+        public BoStage boStage;
+        public BoCharacter boCharacter;
     }
 }

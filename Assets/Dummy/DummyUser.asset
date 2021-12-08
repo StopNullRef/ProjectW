@@ -17,3 +17,15 @@ MonoBehaviour:
     errorMessage: 
     nickname: aa
     gold: 1000
+  dtoStage:
+    errorCode: 0
+    errorMessage: 
+    index: 1000
+    posX: 0
+    posY: 0
+    posZ: 0
+  dtoCharacter:
+    errorCode: 0
+    errorMessage: 
+    index: 1000
+    level: 1

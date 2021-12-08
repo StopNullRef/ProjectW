@@ -39,6 +39,8 @@ namespace ProjectW.Define
         /// 액터의 일반공격 타입
         /// </summary>
         public enum AttackType { Normal, Projectile, }
+
+
     }
 
     public class StaticData

@@ -138,7 +138,10 @@ namespace ProjectW
                     break;
                 case IntroPhase.Comepelte:
                     allLoaded = true;
+                    var ingameManager = InGameManager.Instance;
+                    GameManager.Instance.LoadScene(SceneType.Ingame, ingameManager.ChangeStage());
                     LoadComplete = true;
+
                     break;
             }
         }
@@ -157,7 +160,7 @@ namespace ProjectW
         private IEnumerator WaitForSeconds()
         {
             // 대략 1초 후에 아래 코드가 실행됨
-            yield return new WaitForSeconds(1f);
+            yield return new WaitForSeconds(0.2f);
             loadComplete = false;
             OnPhase(++introPhase);
         }

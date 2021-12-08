@@ -25,5 +25,14 @@ namespace ProjectW.Network
         /// 서버에 요청한 데이터를 받아서 처리할 핸들러
         /// </param>
         void Login(int uniqueId, ResponseHandler<DtoAccount> responseHandler);
+
+        /// <summary>
+        /// 서버에 유저가 마지막으로 존재했던 스테이지에 대한 데이터를 요청하는 메서드
+        /// </summary>
+        /// <param name="uniqueId">유저의 고유 아이디</param>
+        /// <param name="responseHandler">서버에 요청한 스테이지 데이터를 받아서 처리할 핸들러</param>
+        void GetStage(int uniqueId, ResponseHandler<DtoStage> responseHandler);
+
+        void GetCharacter(int uniqueId, ResponseHandler<DtoCharacter> responseHandler);
     }
 }

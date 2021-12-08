@@ -18,11 +18,15 @@ namespace ProjectW.SD
     public class StaticDataModule
     {
         public List<SDCharacter> sdCharacters;
+        public List<SDStage> sdStages;
+        public List<SDGrowthStat> sdGrowthStats;
 
         public void Initialize()
         {
             var loader = new StaticDataLoader();
             loader.Load(out sdCharacters);
+            loader.Load(out sdStages);
+            loader.Load(out sdGrowthStats);
         }
 
         /// <summary>

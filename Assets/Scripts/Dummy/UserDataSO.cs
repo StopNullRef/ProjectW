@@ -14,5 +14,7 @@ namespace ProjectW.Dummy
     public class UserDataSO : ScriptableObject
     {
         public DtoAccount dtoAccount;
+        public DtoStage dtoStage;
+        public DtoCharacter dtoCharacter;
     }
 }
