@@ -43,7 +43,7 @@ namespace ProjectW.Network
             // 다음으로 스테이지 정보를 서버에 요청
             ServerManager.Sever.GetStage(0, stageHandler);
 
-            ServerManager.Sever.GetCharacter(1, characterHandler);
+
         }
 
         /// <summary>
@@ -52,9 +52,15 @@ namespace ProjectW.Network
         /// <param name="dtoStage"></param>
         public void GetStageSuccess(DtoStage dtoStage)
         {
+            ServerManager.Sever.GetCharacter(1, characterHandler);
+
             GameManager.User.boStage = new BoStage(dtoStage);
         }
 
+        /// <summary>
+        /// 캐릭터 정보 요청 성공 시 실행할 메서드
+        /// </summary>
+        /// <param name="dtoCharacter"></param>
         public void GetCharacterSuccess(DtoCharacter dtoCharacter)
         {
             GameManager.User.boCharacter = new BoCharacter(dtoCharacter);

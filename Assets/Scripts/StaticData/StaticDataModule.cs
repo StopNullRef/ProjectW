@@ -24,6 +24,7 @@ namespace ProjectW.SD
         public void Initialize()
         {
             var loader = new StaticDataLoader();
+
             loader.Load(out sdCharacters);
             loader.Load(out sdStages);
             loader.Load(out sdGrowthStats);

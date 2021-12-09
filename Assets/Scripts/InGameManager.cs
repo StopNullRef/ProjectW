@@ -12,6 +12,7 @@ using UnityEngine.SceneManagement;
 
 namespace ProjectW
 {
+    using Actor = Object.Actor;
     /// <summary>
     /// 인게임 내 객체들을 관리할 클래스
     /// 스테이지 전환 시 처리작업 등을 수행 (해당 스테이지에 필요한 리소스 로드 및 인스턴스 생성)
@@ -27,6 +28,54 @@ namespace ProjectW
         /// 현재 스테이지 인스턴스를 들고 있을 필드
         /// </summary>
         private GameObject currentStage;
+
+        public List<Actor> Characters { get; private set; } = new List<Actor>();
+        public List<Actor> Monsters { get; private set; } = new List<Actor>();
+
+        /// <summary>
+        /// 활성화된 액터를 인게임 매니저에 등록하는 기능
+        /// 이 곳에 등록된 액터만 업데이트가 된다.
+        /// </summary>
+        /// <param name="actor">등록할 활성화된 액터의 인스턴스</param>
+        public void AddActor(Actor actor)
+        {
+            switch (actor)
+            {
+                // actor 타입이 몬스터와 ㄱ ㅏㅌ다면 임시로 actor를 monster라는 임시 변수로 사용
+                case var monster when actor.boActor.actorType == Define.Actor.Type.Monster:
+                    Monsters.Add(monster);
+                    break;
+                case var character when actor.boActor.actorType == Define.Actor.Type.Character:
+                    Characters.Add(character);
+                    break;
+            }
+
+        }
+
+        private void FixedUpdate()
+        {
+            
+        }
+
+        //TODO 여기까지함
+        private void Actorupdate(List<Actor> actors)
+        {
+            for(int i =0; i<actors.Count;i++)
+            {
+                // 액터가 죽지 않았따면 업데이트
+                if (actors[i].State != Define.Actor.State.Dead)
+                    actors[i].ActorUpdate();
+                else
+                {
+                    // 죽었다면 액터 컬렉션에서 제거
+                    actors.RemoveAt(i);
+                    // 반복되는 곳에서 리스트 안에 원소를 제거할 때 주의할 점
+                    // 원소 제거시 리스트 공간이 해당 원소 뒤쪽부터 한 칸씩 땡겨짐
+                    i--;
+                }
+            }
+        }
+
 
         /// <summary>
         /// 스테이지 전환 시 필요한 리소스를 불러오고 리소스를 통해 인스턴스를 생성,
@@ -46,7 +95,7 @@ namespace ProjectW
             var resourceManager = ResourceManager.Instance;
 
             // 현재 스테이지 객체가 이미 존재하는지
-            if(currentStage != null)
+            if (currentStage != null)
             {
                 // 존재한다면 새로운 스테이지를 로드할 것이므로 파괴
                 Destroy(currentStage);
@@ -62,7 +111,7 @@ namespace ProjectW
 
             // 그럼 어떻게 해결?
             // 생성한 객체를 로딩씬에서 인게임씬으로 이동
-            SceneManager.MoveGameObjectToScene(currentStage,SceneManager.GetSceneByName(SceneType.Ingame.ToString()));
+            SceneManager.MoveGameObjectToScene(currentStage, SceneManager.GetSceneByName(SceneType.Ingame.ToString()));
 
             // 위의 과정을 통해 스테이지 객체만 로딩 과정에서 미리 만들어두고
             // 그외 캐릭터나 몬스터 (액터)들은 씬이 완전히 전환된 후에 따로 생성

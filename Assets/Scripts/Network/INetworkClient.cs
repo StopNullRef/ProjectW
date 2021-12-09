@@ -33,6 +33,11 @@ namespace ProjectW.Network
         /// <param name="responseHandler">서버에 요청한 스테이지 데이터를 받아서 처리할 핸들러</param>
         void GetStage(int uniqueId, ResponseHandler<DtoStage> responseHandler);
 
+        /// <summary>
+        /// 서버에 유저의 캐릭터 데이터를 요청하는 메서드
+        /// </summary>
+        /// <param name="uniqueId"></param>
+        /// <param name="responseHandler"></param>
         void GetCharacter(int uniqueId, ResponseHandler<DtoCharacter> responseHandler);
     }
 }

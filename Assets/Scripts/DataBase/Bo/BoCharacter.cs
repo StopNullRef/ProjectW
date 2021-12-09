@@ -22,7 +22,14 @@ namespace ProjectW.DB
 
         public BoCharacter(DtoCharacter dtoCharacter)
         {
+            // dtoCharacter에 내 캐릭터의 기획데이터 상의 인덱스 값이 존재함
+            // 해당 데이터를 통해 내 캐릭터의 기획데이터를 불러옴
             sdCharacter = GameManager.SD.sdCharacters.Where(_ => _.index == dtoCharacter.index).SingleOrDefault();
+
+            // 위의 과정을 통해 내 캐릭터의 기획데이터를 불러왔음
+            // -> 기획데이터 중에 해당 캐릭터가 어떤 성장테이블의 로우(행)을 참조하는지에
+            // 대한 데이터가 들어가 있음
+            // -> 캐릭터 기획데이터가 존재한다면 성장스텟 데이터도 불러올 수 있음
             sdGrowthStat = GameManager.SD.sdGrowthStats.Where(_ => _.index == dtoCharacter.index).SingleOrDefault();
             level = dtoCharacter.level;
         }
