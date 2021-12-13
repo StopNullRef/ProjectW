@@ -382,6 +382,7 @@ GameObject:
   - component: {fileID: 4900355296965479051}
   - component: {fileID: 4900355296953001727}
   - component: {fileID: 4900355296960605893}
+  - component: {fileID: 5071167740295944952}
   m_Layer: 0
   m_Name: BlackKnight
   m_TagString: Untagged
@@ -454,6 +455,74 @@ CapsuleCollider:
   m_Height: 1.03
   m_Direction: 1
   m_Center: {x: 0, y: 0.48, z: 0.03}
+--- !u!114 &5071167740295944952
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4900355296956192687}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0684fc99846e78e48b84f5d0630ed7ed, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  boActor:
+    level: 0
+    actorType: 0
+    atkType: 0
+    moveSpeed: 0
+    moveDir: {x: 0, y: 0, z: 0}
+    rotDir: {x: 0, y: 0, z: 0}
+    currentHp: 0
+    maxHp: 0
+    currentMp: 0
+    maxMp: 0
+    atk: 0
+    def: 0
+    atkRange: 0
+    atkInterval: 0
+    isGround: 0
+    canRot: 0
+  boCharacter:
+    level: 0
+    actorType: 0
+    atkType: 0
+    moveSpeed: 0
+    moveDir: {x: 0, y: 0, z: 0}
+    rotDir: {x: 0, y: 0, z: 0}
+    currentHp: 0
+    maxHp: 0
+    currentMp: 0
+    maxMp: 0
+    atk: 0
+    def: 0
+    atkRange: 0
+    atkInterval: 0
+    isGround: 0
+    canRot: 0
+    sdCharacter:
+      index: 0
+      name: 
+      atkType: 0
+      moveSpeed: 0
+      jumpForce: 0
+      atkRange: 0
+      atkInterval: 0
+      growthStatRef: 0
+      resourcePath: 
+    sdGrowthStat:
+      index: 0
+      maxHp: 0
+      maxHpFactor: 0
+      maxMp: 0
+      maxMpFactor: 0
+      atk: 0
+      atkFactor: 0
+      def: 0
+      defFactor: 0
+      behaviour: 0
+      behaviourFactor: 0
 --- !u!1 &4900355296956197153
 GameObject:
   m_ObjectHideFlags: 0

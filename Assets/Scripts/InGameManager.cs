@@ -1,4 +1,6 @@
-﻿using ProjectW.Define;
+﻿using ProjectW.Controller;
+using ProjectW.Define;
+using ProjectW.Object;
 using ProjectW.Resource;
 using ProjectW.Util;
 using System;
@@ -54,11 +56,11 @@ namespace ProjectW
 
         private void FixedUpdate()
         {
-            
+            ActorUpdate(Characters);
+            ActorUpdate(Monsters);
         }
 
-        //TODO 여기까지함
-        private void Actorupdate(List<Actor> actors)
+        private void ActorUpdate(List<Actor> actors)
         {
             for(int i =0; i<actors.Count;i++)
             {
@@ -118,6 +120,50 @@ namespace ProjectW
 
 
             yield return null;
+        }
+
+        /// <summary>
+        /// 위의 ChangeStage 메서드가 씬 전환 도중에 실행되는 작업이라면
+        /// 해당 메서드는 씬 전환이 완료된 후에 실행될 작업
+        /// </summary>
+        public void OnChangeStageComplete()
+        {
+            SpawnCharacter();
+        }
+
+        /// <summary>
+        /// 플레이어 캐릭터 생성 또는 스테이지 이동 시 플레이어 위치 설정
+        /// </summary>
+        private void SpawnCharacter()
+        {
+            // 전환이 완료된 씬에서 플레이어 캐릭터 인스턴스를 찾는다.
+            // PlayerController는 내 캐릭터를 조작할 수 있는 컨트롤러
+            var playerController = FindObjectOfType<PlayerController>();
+            if (playerController == null)
+                return;
+
+            // 플레이어의 캐릭터 인스턴스가 존재한다면
+            // -> 타이틀에서 인게임 씬으로의 변경이 아닌, 인게임 씬에서 스테이지 이동(워프)했을 경우
+            if(playerController.PlayerCharacter !=null)
+            {
+                return;
+            }
+
+            // 존재하지 않는다면
+            // -> 타이틀에서 인게임 씬으로 변경한 경우, 이 때 캐릭터가 없으므로 생성
+            var characterObj = Instantiate(ResourceManager.Instance.LoadObject(GameManager.User.boCharacter.sdCharacter.resourcePath));
+
+            // 유저의 캐릭터가 마지막으로 종료한 위치(처음 접속일 경우 0,0,0)로 캐릭터를 이동
+            characterObj.transform.position = GameManager.User.boStage.prevPos;
+
+            var playerCharacter = characterObj.GetComponent<Character>();
+            // 생성한 캐릭터 객체가 갖는 캐릭터 컴포넌트에 유저의 캐릭터 정보를 전달하여 초기화시킨다.
+            playerCharacter.Initialize(GameManager.User.boCharacter);
+            // 초기화가 끝난 캐릭터 객체를 유저가 제어할 수 있게 플레이어 컨트롤러에 전달하여 초기화시킨다.
+            playerController.Initialize(playerCharacter);
+
+            // 모든 초기화가 완료된 캐릭터 객체를 정상적으로 업데이트할 수 있게 IngameManger에 등록시킨다.
+            AddActor(playerCharacter);
         }
 
     }

@@ -25,5 +25,6 @@ namespace ProjectW.DB
         public float atkRange;
         public float atkInterval;
         public bool isGround;
+        public bool canRot;
     }
 }

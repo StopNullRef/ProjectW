@@ -139,7 +139,7 @@ namespace ProjectW
                 case IntroPhase.Comepelte:
                     allLoaded = true;
                     var ingameManager = InGameManager.Instance;
-                    GameManager.Instance.LoadScene(SceneType.Ingame, ingameManager.ChangeStage());
+                    GameManager.Instance.LoadScene(SceneType.Ingame, ingameManager.ChangeStage(), ingameManager.OnChangeStageComplete);
                     LoadComplete = true;
 
                     break;

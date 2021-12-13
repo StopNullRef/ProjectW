@@ -1150,10 +1150,62 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7d38b206ed0afc5419a0a104512f7ece, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  loadProgress: 0
   useDummyServer: 1
   boUser:
     boAccount:
       nickname: 
       gold: 0
+    boStage:
+      prevStageIndex: 0
+      prevPos: {x: 0, y: 0, z: 0}
+      sdStage:
+        index: 0
+        name: 
+        genMonsters: 
+        spawnArea: 
+        warpStageRef: 
+        resourcePath: 
+    boCharacter:
+      level: 0
+      actorType: 0
+      atkType: 0
+      moveSpeed: 0
+      moveDir: {x: 0, y: 0, z: 0}
+      rotDir: {x: 0, y: 0, z: 0}
+      currentHp: 0
+      maxHp: 0
+      currentMp: 0
+      maxMp: 0
+      atk: 0
+      def: 0
+      atkRange: 0
+      atkInterval: 0
+      isGround: 0
+      canRot: 0
+      sdCharacter:
+        index: 0
+        name: 
+        atkType: 0
+        moveSpeed: 0
+        jumpForce: 0
+        atkRange: 0
+        atkInterval: 0
+        growthStatRef: 0
+        resourcePath: 
+      sdGrowthStat:
+        index: 0
+        maxHp: 0
+        maxHpFactor: 0
+        maxMp: 0
+        maxMpFactor: 0
+        atk: 0
+        atkFactor: 0
+        def: 0
+        defFactor: 0
+        behaviour: 0
+        behaviourFactor: 0
   sd:
     sdCharacters: []
+    sdStages: []
+    sdGrowthStats: []

@@ -23,6 +23,25 @@ namespace ProjectW.Define
         Comepelte, // 완료
     }
 
+    public class Camera
+    {
+        public enum View { Standard,Front}
+        public const float RotSpeed = 3f;
+        public const string CamPosPath = "Prefabs/CamPos";
+    }
+
+    public class Input
+    {
+        public const string AxisX = "Horizontal"; // 캐릭터 좌우 이동에 사용 (a,d 만 사용가능하게)
+        public const string AxisZ = "Vertical"; // 캐릭터 앞뒤 이동에 사용 (w,s 만 사용)
+        public const string MouseX = "Mouse X"; // 마우스 수평(좌우) 이동에 대한 축값
+        public const string MouseY = "Mouse Y"; // 마우스 수직 이동에 대한 축값
+        public const string FrontCam = "Fire3"; // 카메라가 캐릭터 후방(3인칭)에서 전방 카메라로 변경(leftctrl만 사용)
+        public const string Jump = "Jump"; // 캐릭터 점프 (spaceBar만 사용)
+        public const string MouseLeft = "Fire1"; // 마우스 왼쪽 클릭
+        public const string MouseRight = "Fire2"; // 마우스 오른쪽 클릭
+    }
+
     public class Actor
     {
         /// <summary>
