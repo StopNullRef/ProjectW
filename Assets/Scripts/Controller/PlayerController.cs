@@ -25,6 +25,8 @@ namespace ProjectW.Controller
         /// </summary>
         public Character PlayerCharacter { get; private set; }
 
+        public CameraController cameraController;
+
         private InputController inputController = new InputController();
 
         /// <summary>
@@ -39,13 +41,65 @@ namespace ProjectW.Controller
 
             PlayerCharacter = character;
 
+            cameraController.SetTarget(PlayerCharacter.transform);
+
             inputController.AddAxis(Input.AxisZ, GetAxisZ); // 캐릭터 앞뒤 이동 키
             inputController.AddAxis(Input.MouseX, GetMouseX); // 캐릭터 좌우 회전
 
             inputController.AddButton(Input.MouseLeft, OnDownMouseLeft); // 일반공격 키, 눌렀을 때 한 번 공격 실행
-            inputController.AddButton(Input.MouseRight, OnDownMouseRight, OnUpMouseRight); // 누르고 있을 시 회전 가능 상태, 아니라면 회전 불가능 상태
+            inputController.AddButton(Input.MouseRight, OnDownMouseRight, OnUpMouseRight, null, OnUpMouseRight); // 누르고 있을 시 회전 가능 상태, 아니라면 회전 불가능 상태
             inputController.AddButton(Input.Jump, OnDownJump); // 점프 키, 눌렀을 때 한 번 점프 실행
         }
+
+        private void FixedUpdate()
+        {
+            if (PlayerCharacter == null)
+            {
+                return;
+            }
+
+            if (PlayerCharacter.State == Define.Actor.State.Dead)
+            {
+                return;
+            }
+
+            InputUpdate();
+        }
+
+        private void InputUpdate()
+        {
+            for (int i = 0; i < inputController.inputAxes.Count; i++)
+            {
+                var value = UnityEngine.Input.GetAxisRaw(inputController.inputAxes[i].Key);
+                inputController.inputAxes[i].Value.GetAxisValue(value);
+            }
+
+            for (int i = 0; i < inputController.inputButtons.Count; i++)
+            {
+                var key = inputController.inputButtons[i].Key;
+                var value = inputController.inputButtons[i].Value;
+
+                if (UnityEngine.Input.GetButtonDown(key))
+                {
+                    value.OnDown();
+                }
+                else if (UnityEngine.Input.GetButton(key))
+                {
+                    value.OnPress();
+                }
+                else if (UnityEngine.Input.GetButtonUp(key))
+                {
+                    value.OnUp();
+                }
+                else
+                {
+                    value.OnNotPress();
+                }
+
+            }
+        }
+
+
 
         #region Input Implementation (입력 구현부)
         private void GetAxisZ(float value)
@@ -75,6 +129,10 @@ namespace ProjectW.Controller
 
         private void OnDownJump()
         {
+            // 이미 공중이라면 점프할 수 없게 리턴
+            if (!PlayerCharacter.boActor.isGround)
+                return;
+
             PlayerCharacter.SetState(Define.Actor.State.Jump);
         }
 

@@ -79,6 +79,8 @@ namespace ProjectW.Object
         {
             State = state;
 
+            anim.SetInteger("state", (int)State);
+
             // 상태 변경 후 변경된 상태에 따른 처리를 switch/case로 검사하여 실행
             // 액터에서 파생 객체들이 공통으로 갖는 상태만을 처리한다.
             // 그 후 파생 객체에 따라 추가적으로 갖는 상태는 해당 파생클래스에서 별도로 처리

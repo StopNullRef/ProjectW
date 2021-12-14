@@ -73,9 +73,55 @@ namespace ProjectW.Controller
             // 위의 과정을 통해 결과적으로 CamPos의 자식으로 배치된 스탠다드 뷰와 프론트 뷰의 트랜스폼이
             // 타겟을 기준으로 기존에 설정해둔 위치와 회전값을 유지할 수 있게 된다.
 
-            //TODO
+            standardPos = camPos.Find("StandardPos");
+            frontPos = camPos.Find("FrontPos");
 
+            // 타겟 설정 시 카메라의 초기 위치와 바라보는 방향을 스탠다드 뷰의 위치와 방향으로 설정
+            transform.position = standardPos.position;
+            transform.forward = standardPos.forward;
         }
 
+        private void FixedUpdate()
+        {
+            if (target == null)
+                return;
+
+            switch (view)
+            {
+                case View.Standard:
+                    SetPosition(false, standardPos);
+                    break;
+                case View.Front:
+                    SetPosition(true, frontPos);
+                    break;
+            }
+        }
+
+        /// <summary>
+        /// 강제로 스탠다드 뷰의 위치와 회전 값을 갖도록 설정하는 기능
+        /// </summary>
+        public void SetForceStandardView()
+        {
+            SetPosition(false, standardPos);
+        }
+
+        /// <summary>
+        /// 카메라의 이동 및 회전 연산
+        /// </summary>
+        /// <param name="isLerp">이동/회전 시 보간할 것인지? 보간 하지 않을 시 한 번에 이동/회전</param>
+        /// <param name="target">스탠다드 뷰 또는 프론트 뷰, 둘 중 하나</param>
+        private void SetPosition(bool isLerp,Transform target)
+        {
+            if(isLerp)
+            {
+                transform.position = Vector3.Lerp(transform.position, target.position, Time.fixedDeltaTime * smooth);
+                transform.forward = Vector3.Lerp(transform.forward, target.forward, Time.fixedDeltaTime * smooth);
+            }
+            else
+            {
+                transform.position = target.position;
+                transform.forward = target.forward;
+            }
+        }
     }
 }
