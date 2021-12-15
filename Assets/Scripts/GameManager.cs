@@ -1,6 +1,7 @@
 using ProjectW.DB;
 using ProjectW.Define;
 using ProjectW.SD;
+using ProjectW.UI;
 using ProjectW.Util;
 using System;
 using System.Collections;
@@ -67,7 +68,7 @@ namespace ProjectW
         /// <param name="sceneName">로드할 씬의 이름을 갖는 열거형</param>
         /// <param name="loadCoroutine">씬 전환 시 로딩씬에서 다음 씬에 필요한 미리 처리할 작업</param>
         /// <param name="loadComplete">씬 전환 완료 후 실행할 기능</param>
-        public void LoadScene(SceneType sceneName, IEnumerator loadCoroutine = null,Action loadComplete = null)
+        public void LoadScene(SceneType sceneName, IEnumerator loadCoroutine = null, Action loadComplete = null)
         {
             // SceneManager.LoadScene(); 동기화 방식의 씬 전환
             // -> 씬 전환 작업을 처리하느라, 현재 씬이 그동안 멈춰있음
@@ -102,7 +103,7 @@ namespace ProjectW
                 // 내가 불러오고자 하는 씬을 추가
                 // -> 씬 변경 시, 로드씬 옵션을 additive로 주면 기존 씬이 변경되는 것이 아닌
                 // 기존 씬에 새로운 씬이 추가되어 하이라키에 복수의 씬이 존재하게 됨
-                var asyncOper =  SceneManager.LoadSceneAsync(sceneName.ToString(),LoadSceneMode.Additive);
+                var asyncOper = SceneManager.LoadSceneAsync(sceneName.ToString(), LoadSceneMode.Additive);
 
                 // 방금 추가한 씬을 비활성화
                 // 이유? 로딩 씬에서 새로운 씬이 하나가 추가되어 2개의 씬이 활성화된 상태인데..
@@ -112,7 +113,7 @@ namespace ProjectW
                 asyncOper.allowSceneActivation = false;
 
                 // 변경하고자 하는 씬에 필요한 작업이 존재한다면 실행
-                if(loadCoroutine != null)
+                if (loadCoroutine != null)
                 {
                     // 해당 작업이 완료될 때까지 대기
                     yield return StartCoroutine(loadCoroutine);
@@ -132,7 +133,7 @@ namespace ProjectW
                 {
                     // isDone 이 false라면 씬이 아직 로드가 끝나지 않은 상태
                     // 그럼 이때 현재 로드 상황을 loadProgress로 나타낸다.
-                    if(loadProgress >= 0.9f)
+                    if (loadProgress >= 0.9f)
                     {
                         loadProgress = 1f;
 
@@ -161,6 +162,83 @@ namespace ProjectW
                 loadComplete?.Invoke();
             }
 
+        }
+
+        /// <summary>
+        /// 인게임 씬에서 스테이지 전환 시 사용
+        /// -> 실제 씬을 변경하는 것이 아닌, 로딩 씬을 이용하여 씬 전환처럼 유저에게 보이도록 함
+        /// 이 때, 로딩 씬을 이용하여 변경하고자 하는 스테이지에 필요한 리소스 로드나 초기화 작업 등을 처리
+        /// ex) 인게임씬(시작마을) -> 인게임씬(초보자사냥터)
+        /// </summary>
+        /// <param name="loadCoutine">로딩 중에 처리할 작업</param>
+        /// <param name="loadComplete">로딩 완료 후 처리할 작업</param>
+        public void OnAdditiveLoadingScene(IEnumerator loadCoutine = null, Action loadComplete = null)
+        {
+            StartCoroutine(WaitForLoad());
+
+            IEnumerator WaitForLoad()
+            {
+
+                // 로딩 씬에서 현재 로딩 진행 상태를 나타낼 값을 초기화
+                loadProgress = 0;
+
+                // 로딩 씬을 비동기로 불러옴, 이 때 씬전환이 아닌 씬 추가 방식으로 로드
+                var asyncOper = SceneManager.LoadSceneAsync(SceneType.Loading.ToString(), LoadSceneMode.Additive);
+
+                // 씬 로드가 완료되지 않았다면 반복
+                while(!asyncOper.isDone)
+                {
+                    // 씬 로드 진행 상태를 계속해서 업데이트한다.
+                    loadProgress = asyncOper.progress;
+                    yield return null;
+                }
+
+                UILoading uiLoading = null;
+
+                // uiLoading이 null 이라면 반복
+                while(uiLoading == null)
+                {
+                    // uiLoading 인스턴스 객체를 씬에서 계속해서 찾는다.
+                    // 계속해서 찾는 이유?
+                    // 한 번만 탐색을 실행시켰을 경우, 정상적으로 못 찾을 확률이 높기 때문
+                    // 왜 한 번에 정상적으로 못 찾는지?
+                    // -> 로딩 씬을 로드 후 바로 해당 구문이 실행되기 때문에 이 시점에
+                    // uiLoading 객체가 초기화가 완료된 시점인지 알 수 없다.
+                    // 초기화가 완료되지 않았다면 정상적으로 객체를 찾을 수 없다.
+                    // 결론
+                    // -> 해당 코드를 통해 UILoading 객체가 씬 로드 후 초기화가 될 때까지 기다리는 작업
+                    uiLoading = FindObjectOfType<UILoading>();
+
+                    yield return null;
+                }
+
+                // 로딩씬의 카메라를 비활성화 시킴
+                // -> 씬을 추가하는 방식으로 로드하였으므로, 현재 2개의 씬이 활성화된 상태
+                // 이 때, 인게임 씬에 존재하는 카메라로 모든 걸 출력할 수 있기 때문에
+                // 로딩씬의 카메라를 비활성화함 (필요없는 렌더를 막음)
+                uiLoading.cam.enabled = false;
+
+                // 로딩 씬이 활성화 된 상태에서 처리할 작업
+                // -> 맵 데이터 불러오기 및 초기화
+                if(loadCoutine != null)
+                    yield return StartCoroutine(loadCoutine);
+
+                // 실제 로드 작업이 별로 없기 때문에 로딩 씬이 너무 빨리 넘어가므로 확인할 수 있게
+                yield return new WaitForSeconds(1f);
+
+
+                // 실제 진행 상태랑은 차이가 있음
+                // -> 실제 데이터 로드 진행상태와는 차이가 있음
+                // 유저에게 보여주기 식
+                loadProgress = 1f;
+
+                // 필요한 작업이 끝났으므로, 로딩 씬을 언로드
+
+                yield return SceneManager.UnloadSceneAsync(SceneType.Loading.ToString());
+
+                // 모든 전환 작업이 완료되었으므로, 전환 완료 후 실행할 작업을 실행
+                loadComplete?.Invoke();
+            }
         }
 
     }

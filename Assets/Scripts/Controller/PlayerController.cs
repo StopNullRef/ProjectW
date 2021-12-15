@@ -38,6 +38,8 @@ namespace ProjectW.Controller
         {
             // 내 캐릭터의 하이라키 상의 부모를 플레이어 컨트롤러로 지성
             character.transform.SetParent(transform);
+            // 내가 사용할 캐릭터에게 플레이어 태그를 부여
+            character.tag = "Player";
 
             PlayerCharacter = character;
 

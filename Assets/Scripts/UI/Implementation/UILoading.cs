@@ -15,6 +15,9 @@ namespace ProjectW.UI
         public TextMeshProUGUI loadStateDesc;
         public Image loadGauge;
 
+        // Loading 씬의 카메라 객체 참조
+        public Camera cam;
+
         private void Update()
         {
             loadGauge.fillAmount = GameManager.Instance.loadProgress;

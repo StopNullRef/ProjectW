@@ -443,6 +443,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   loadStateDesc: {fileID: 670609135}
   loadGauge: {fileID: 1223316334}
+  cam: {fileID: 240126035}
 --- !u!1 &240126033
 GameObject:
   m_ObjectHideFlags: 0

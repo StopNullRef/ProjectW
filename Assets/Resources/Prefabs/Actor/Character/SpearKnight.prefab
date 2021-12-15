@@ -764,7 +764,7 @@ GameObject:
   - component: {fileID: 2390231781112812159}
   m_Layer: 0
   m_Name: SpearKnight
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -812,7 +812,7 @@ Rigidbody:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4688683381692513777}
   serializedVersion: 2
-  m_Mass: 10
+  m_Mass: 5
   m_Drag: 0
   m_AngularDrag: 0
   m_UseGravity: 1
@@ -831,7 +831,7 @@ CapsuleCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   m_Radius: 0.4
-  m_Height: 0.92
+  m_Height: 1
   m_Direction: 1
   m_Center: {x: 0, y: 0.48, z: 0.03}
 --- !u!114 &2390231781112812159

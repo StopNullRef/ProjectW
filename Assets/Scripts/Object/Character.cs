@@ -71,6 +71,8 @@ namespace ProjectW.Object
 
         public override void ActorUpdate()
         {
+            CheckGround();
+
             base.ActorUpdate();
         }
 
@@ -84,7 +86,7 @@ namespace ProjectW.Object
 
             // 속도의 벡터의 길이가 0과 같다면 안 움직인다는 뜻
             // -> 모션을 대기 모션으로
-            if(Mathf.Approximately(velocity.sqrMagnitude,0))
+            if (Mathf.Approximately(velocity.sqrMagnitude, 0))
             {
                 SetState(State.Idle);
             }
@@ -102,10 +104,16 @@ namespace ProjectW.Object
         /// -> 레이캐스팅에 비해 비용이 싸다
         /// -> 대신 레이캐스팅 보다 충돌/겹침 체크가 정교하지 않다.
         /// 2. 레이캐스팅을 이용하는 방법
-        /// ->
         /// </summary>
         private void CheckGround()
         {
+            // 레이캐스팅을 이용해서 캐릭터가 땅에 닿았는지 확인
+            boActor.isGround = Physics.Raycast(transform.position, Vector3.down, 0.1f, 1 << LayerMask.NameToLayer("Ground"));
+
+            //  isGround의 값이 true 일 때 점프 상태라면
+            // -> 캐릭터가 점프 했다가 땅에 착지했다는 뜻
+            if (State == State.Jump && boCharacter.isGround)
+                SetState(State.Idle);
 
         }
 

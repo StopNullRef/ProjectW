@@ -146,6 +146,16 @@ namespace ProjectW
             // -> 타이틀에서 인게임 씬으로의 변경이 아닌, 인게임 씬에서 스테이지 이동(워프)했을 경우
             if(playerController.PlayerCharacter !=null)
             {
+                // 새로 이동한 스테이지에 이전 스테이지와 연결된 워프를 찾음
+                var warp = currentStage.transform.Find($"WarpHolder/{GameManager.User.boStage.prevStageIndex}/EntryPos").transform;
+
+                
+                // 플레이어의 위치와 바라보는 방향을 이동한 워프에 설정된 위치와 방향으로 바꿔준다
+                playerController.PlayerCharacter.transform.position = warp.position;
+                playerController.PlayerCharacter.transform.forward = warp.forward;
+
+                // 플레이어가 워프로 인해 갑작스롭게 이동하였으므로, 카메라도 동일하게 강제로 이동시켜준다.
+                playerController.cameraController.SetForceStandardView();
                 return;
             }
 
