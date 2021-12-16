@@ -27,6 +27,11 @@ namespace ProjectW
         private bool isReady;
 
         /// <summary>
+        /// 활성화된 몬스터 객체들을 인게임에서 들고 있을 홀더 (하이라키상의 부모)
+        /// </summary>
+        private Transform monsterHolder;
+
+        /// <summary>
         /// 현재 스테이지 인스턴스를 들고 있을 필드
         /// </summary>
         private GameObject currentStage;
@@ -43,7 +48,7 @@ namespace ProjectW
         {
             switch (actor)
             {
-                // actor 타입이 몬스터와 ㄱ ㅏㅌ다면 임시로 actor를 monster라는 임시 변수로 사용
+                // actor 타입이 몬스터와 같다면 임시로 actor를 monster라는 임시 변수로 사용
                 case var monster when actor.boActor.actorType == Define.Actor.Type.Monster:
                     Monsters.Add(monster);
                     break;
@@ -176,5 +181,17 @@ namespace ProjectW
             AddActor(playerCharacter);
         }
 
+        /// <summary>
+        /// 몬스터 스폰 기능
+        /// </summary>
+        private void SpawnMonster()
+        {
+            if (monsterHolder == null)
+            {
+                //없다면 몬스터 홀더를 생성
+                monsterHolder = new GameObject("MonsterHolder").transform;
+                monsterHolder.position = Vector3.zero;
+            }
+        }
     }
 }

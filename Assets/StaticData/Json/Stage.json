@@ -9,7 +9,8 @@
       -1
     ],
     "warpStageRef": [
-      1001
+      1001,
+      1002
     ],
     "resourcePath": "Prefabs/Stage/StartingVillage"
   },
@@ -30,5 +31,19 @@
       1000
     ],
     "resourcePath": "Prefabs/Stage/BeginnerHuntingGround"
+  },
+  {
+    "index": 1002,
+    "name": "할로윈마을",
+    "genMonsters": [
+      -1
+    ],
+    "spawnArea": [
+      -1
+    ],
+    "warpStageRef": [
+      1000
+    ],
+    "resourcePath": "Prefabs/Stage/HalloweenStage"
   }
 ]

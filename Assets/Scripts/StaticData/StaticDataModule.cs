@@ -20,6 +20,7 @@ namespace ProjectW.SD
         public List<SDCharacter> sdCharacters;
         public List<SDStage> sdStages;
         public List<SDGrowthStat> sdGrowthStats;
+        public List<SDMonster> sdMonsters;
 
         public void Initialize()
         {
@@ -28,6 +29,7 @@ namespace ProjectW.SD
             loader.Load(out sdCharacters);
             loader.Load(out sdStages);
             loader.Load(out sdGrowthStats);
+            loader.Load(out sdMonsters);
         }
 
         /// <summary>
