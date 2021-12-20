@@ -7,5 +7,5 @@ AnimatorOverrideController:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: RadishAnim
-  m_Controller: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 2dafabc9051aacf48835b5704781985f, type: 2}
   m_Clips: []

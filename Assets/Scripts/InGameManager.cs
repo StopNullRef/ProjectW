@@ -1,4 +1,5 @@
 ﻿using ProjectW.Controller;
+using ProjectW.DB;
 using ProjectW.Define;
 using ProjectW.Object;
 using ProjectW.Resource;
@@ -15,6 +16,8 @@ using UnityEngine.SceneManagement;
 namespace ProjectW
 {
     using Actor = Object.Actor;
+    using Random = UnityEngine.Random;
+
     /// <summary>
     /// 인게임 내 객체들을 관리할 클래스
     /// 스테이지 전환 시 처리작업 등을 수행 (해당 스테이지에 필요한 리소스 로드 및 인스턴스 생성)
@@ -40,6 +43,13 @@ namespace ProjectW
         public List<Actor> Monsters { get; private set; } = new List<Actor>();
 
         /// <summary>
+        /// 현재 스테이지 내에서 몬스터 스폰영역에 대한 정보를 들고 있는 컬렉션
+        /// Key : 현재 스테이지의 SpawnHolder 객체의 배치된 순서 (하이라키상의 순서)
+        /// Value : 영역 데이터
+        /// </summary>
+        private Dictionary<int, Bounds> spawnAreaBounds = new Dictionary<int, Bounds>();
+
+        /// <summary>
         /// 활성화된 액터를 인게임 매니저에 등록하는 기능
         /// 이 곳에 등록된 액터만 업데이트가 된다.
         /// </summary>
@@ -56,7 +66,13 @@ namespace ProjectW
                     Characters.Add(character);
                     break;
             }
+            actor.gameObject.SetActive(true);
+        }
 
+        private void Update()
+        {
+            if (isReady)
+                CheckSpawnTime();
         }
 
         private void FixedUpdate()
@@ -67,7 +83,7 @@ namespace ProjectW
 
         private void ActorUpdate(List<Actor> actors)
         {
-            for(int i =0; i<actors.Count;i++)
+            for (int i = 0; i < actors.Count; i++)
             {
                 // 액터가 죽지 않았따면 업데이트
                 if (actors[i].State != Define.Actor.State.Dead)
@@ -123,6 +139,57 @@ namespace ProjectW
             // 위의 과정을 통해 스테이지 객체만 로딩 과정에서 미리 만들어두고
             // 그외 캐릭터나 몬스터 (액터)들은 씬이 완전히 전환된 후에 따로 생성
 
+            // 현재 스테이가 변경되었으므로, 변경된 스테이지에서 사용될 몬스터 리소스를 불러와 몬스터풀을 등록
+            // 추가로 스테이지의 몬스터 스폰 영역에 대한 정보도 미리 찾아둔다.
+
+            var sd = GameManager.SD;
+
+            // 하이라키상에 스폰 영역들을 갖는 홀더의 참조를 담을 변수
+            Transform spawnAreaHolder = null;
+
+            // 하이라키 상에서 스폰영역을 찾는 것을 시도한다.
+            try
+            {
+                spawnAreaHolder = currentStage.transform.Find("SpawnAreaHolder");
+            }
+            catch
+            {
+                // 이 곳에 들어왔다는 것은 스폰 영역 홀더를 차지 못했다는 것
+                // -> 스폰 영역 홀더가 없는 경우는 몬스터를 생성하지 않는 스테이지라는 뜻
+                // 따라서, 코루틴을 종료시킨다.
+                yield break;
+            }
+
+            // 해당 스테이지에서 생성될 수 있는 몬스터의 종류만큼 반복
+            for (int i = 0; i < sdStage.genMonsters.Length; i++)
+            {
+                // 몬스터 기획 데이터를 하나씩 불러온다.
+                var sdMonster = sd.sdMonsters.Where(_ => _.index == sdStage.genMonsters[i]).SingleOrDefault();
+
+                // 불러온 데이터가 존재한다면  몬스터 풀에 등록
+                if (sdMonster != null)
+                {
+                    resourceManager.LoadPoolableObject<Object.Monster>(sdMonster.resourcePath, 10);
+                }
+                // 존재하지 않는다면 다음으로 넘김
+                else
+                    continue;
+
+                // 해당 몬스터의 스폰구역에 대한 정보를 가져온다.
+                var spawnAreaIndex = sdStage.spawnArea[i];
+                // 스폰 영역 인덱스가 -1 이라면, 몬스터를 생성하지 않는 스테이지
+                if (spawnAreaIndex != -1)
+                {
+                    // 해당 스폰 영역 인덱스가 딕셔너리에 이미 존재하는지 체크
+                    // -> (중복되는 영역을 갖는 몬스터가 있다면 이밈 딕셔너리에 해당 영역이 등록 되어있으므로)
+                    if (!spawnAreaBounds.ContainsKey(spawnAreaIndex))
+                    {
+                        // 이 곳에 들어왔다는 것은 등록되지 않았다는 것, 따라서 새로 등록
+                        var spawnArea = spawnAreaHolder.GetChild(spawnAreaIndex);
+                        spawnAreaBounds.Add(spawnAreaIndex, spawnArea.GetComponent<Collider>().bounds);
+                    }
+                }
+            }
 
             yield return null;
         }
@@ -133,7 +200,12 @@ namespace ProjectW
         /// </summary>
         public void OnChangeStageComplete()
         {
+            InitSpawnTime();
+
             SpawnCharacter();
+            SpawnMonster();
+
+            isReady = true;
         }
 
         /// <summary>
@@ -149,12 +221,12 @@ namespace ProjectW
 
             // 플레이어의 캐릭터 인스턴스가 존재한다면
             // -> 타이틀에서 인게임 씬으로의 변경이 아닌, 인게임 씬에서 스테이지 이동(워프)했을 경우
-            if(playerController.PlayerCharacter !=null)
+            if (playerController.PlayerCharacter != null)
             {
                 // 새로 이동한 스테이지에 이전 스테이지와 연결된 워프를 찾음
                 var warp = currentStage.transform.Find($"WarpHolder/{GameManager.User.boStage.prevStageIndex}/EntryPos").transform;
 
-                
+
                 // 플레이어의 위치와 바라보는 방향을 이동한 워프에 설정된 위치와 방향으로 바꿔준다
                 playerController.PlayerCharacter.transform.position = warp.position;
                 playerController.PlayerCharacter.transform.forward = warp.forward;
@@ -192,6 +264,125 @@ namespace ProjectW
                 monsterHolder = new GameObject("MonsterHolder").transform;
                 monsterHolder.position = Vector3.zero;
             }
+
+            var sd = GameManager.SD;
+            // 현재 스테이지에 대한 기획데이터 참조를 받아둠
+            var sdStage = GameManager.User.boStage.sdStage;
+
+            // 미리 설정한 최소, 최대 값 사이의 랜덤값을 뽑아 그 수만큼 몬스터를 생성
+            var monsterSpawnCnt = Random.Range(Define.Monster.MinSpawnCnt, Define.Monster.MaxSpawnCnt);
+
+            // 몬스터를 생성하기 위해 (정확히는 몬스터 객체는 이미 생성되어있음) 몬스터 풀을 가져옴
+            // -> 몬스터는 오브젝트 풀을 사용하기 때문에 로딩 과정 또는 씬 전환 과정 사이에
+            // 이미 몬스터 풀에 몬스터들은 생성되어 있는 상태
+
+            var monsterPool = ObjectPoolManager.Instance.GetPool<Object.Monster>();
+
+            // 랜덤 수만큼 몬스터를 생성
+            for (int i = 0; i < monsterSpawnCnt; i++)
+            {
+                // 이 때 어떤 종류의 몬스터를 생성할 것인가?
+                // -> 현재 스테이지에서 생성할 수 있는 몬스터 중에 랜덤하게 생성
+                // 스테이지가 생성할 수 있는 몬스터 인덱스를 갖는 배열 데이터 중에
+                // 랜덤하게 하나의 몬스터 인덱스를 가져온다.
+                var randIndex = UnityEngine.Random.Range(0, sdStage.genMonsters.Length);
+
+                // 생성할 수 있는 몬스터 인덱스를 갖는 배열 중에 랜덤한 배열인덱스 값을 뽑았으므로
+                // 해당 인덱스로 몬스터 인덱스를 불러온다.
+                var genMonster = sdStage.genMonsters[randIndex];
+
+                // -1과 같다면, 몬스터가 존재하지 않는 스테이지이므로, 강제로 메서드를 종료한다.
+                if (genMonster == -1)
+                    return;
+
+                // 생성할 몬스터의 기획 데이터를 가져온다.
+                var sdMonster = sd.sdMonsters.Where(_ => _.index == genMonster).SingleOrDefault();
+
+                // 몬스터 기획데이터를 이용하여 몬스터 풀에서 해당 데이터와 일치하는 몬스터를 가져온다.
+
+                // 몬스터 리소스에 설정된 이름을 가져온다 (리소스 패스에서 마지막 슬래쉬가 있는 부분까지 전부 문자열 삭제)
+                // -> 결과적으로 프리팹이름만 남음 (ex: Radish, Cat, Mushroom)
+                // 비용이 좋지 못한 작업이므로 나중에 다른 방안으로 수정해보는 것 추천
+                var monsterName = sdMonster.resourcePath.Remove(0, sdMonster.resourcePath.LastIndexOf('/') + 1);
+
+                var monster = monsterPool.GetObj(_ => _.name == monsterName);
+
+                // 풀에서 몬스터를 가져오지 못했을 시 다음으로 넘긴다.
+                if (monster == null)
+                    continue;
+
+                // 이 곳의 로직이 실행된다는 것은 몬스터 풀에서 정상적으로 몬스터를 가져왔다는 뜻
+                // 가져온 몬스터를 스폰 영역에 맞는 위치에 설정하고 초기화 후
+                // 활성 몬스터 목록(인게임 매니저에 몬스터 리스트)에 넣어준다.
+
+                // 스폰 영역 내에서 랜덤하게 스폰할 위치를 뽑음
+                var bounds = spawnAreaBounds[sdStage.spawnArea[randIndex]];
+                var spawnPosX = UnityEngine.Random.Range(-bounds.size.x * 0.5f, bounds.size.x * 0.5f);
+                var spawnPosZ = UnityEngine.Random.Range(-bounds.size.z * 0.5f, bounds.size.z * 0.5f);
+
+                monster.transform.position = bounds.center + new Vector3(spawnPosX, 0, spawnPosZ);
+                // 풀에서 가져온 몬스터는 활성화하여 사용할 것이므로, 몬스터 홀더를 부모를 변경해준다.
+                // -> 풀에 있는 객체들은 별도로 풀이 만든 홀더에 존재하고 있음
+                monster.transform.SetParent(monsterHolder);
+                monster.Initialize(new BoMonster(sdMonster));
+
+                AddActor(monster);
+            }
+
+        }
+
+        /// <summary>
+        /// 몬스터 스폰시간 초기화
+        /// </summary>
+        private void InitSpawnTime()
+        {
+            var boStage = GameManager.User.boStage;
+
+            if (Time.time - boStage.prevSpawnTime > boStage.spawnCheckTime)
+            {
+                // 스폰을 한 번 진쟁하므로, 이전 스폰시간을 현재 시간으로 변경
+                boStage.prevSpawnTime = Time.time;
+                // 스폰을 한 번 진행하므로, 스폰체크시간을 정해놓은 범위 안에 랜덤한 값으로 변경
+                // -> 결과적으로 몬스터를 한 번 스폰한 후, 스폰시간이 랜덤하게 변경됨
+                boStage.spawnCheckTime = UnityEngine.Random.Range(Define.Monster.MinSpawnTime, Define.Monster.MaxSpawnTime);
+            }
+        }
+
+        /// <summary>
+        /// 몬스터 스폰 시간을 체크하는 기능
+        /// </summary>
+        private void CheckSpawnTime()
+        {
+            if (currentStage == null)
+                return;
+
+            var boStage = GameManager.User.boStage;
+
+            if (Time.time - boStage.prevSpawnTime > boStage.spawnCheckTime)
+            {
+                InitSpawnTime();
+                SpawnMonster();
+            }
+        }
+
+        /// <summary>
+        /// 몬스터 인덱스를 받아 해당 몬스터의 스폰 구역을 찾아
+        /// 해당 스폰 구역 내에서 랜덤한 위치를 반환
+        /// </summary>
+        /// <param name="monsterindex"></param>
+        /// <returns></returns>
+        public Vector3 GenRandPosInArea(int monsterindex)
+        {
+            var sdStage = GameManager.User.boStage.sdStage;
+
+            int index = sdStage.genMonsters.Where(_ => _ == monsterindex).SingleOrDefault();
+
+            // 스폰 영역 내에서 랜덤하게 스폰할 위치를 뽑음
+            var bounds = spawnAreaBounds[sdStage.spawnArea[index]];
+            var spawnPosX = UnityEngine.Random.Range(-bounds.size.x * 0.5f, bounds.size.x * 0.5f);
+            var spawnPosZ = UnityEngine.Random.Range(-bounds.size.z * 0.5f, bounds.size.z * 0.5f);
+
+            return bounds.center + new Vector3(spawnPosX, 0, spawnPosZ);
         }
     }
 }

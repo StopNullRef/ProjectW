@@ -101,7 +101,7 @@ SkinnedMeshRenderer:
   m_GameObject: {fileID: 5237796507687962789}
   m_Enabled: 1
   m_CastShadows: 1
-  m_ReceiveShadows: 1
+  m_ReceiveShadows: 0
   m_DynamicOccludee: 1
   m_MotionVectors: 1
   m_LightProbeUsage: 1
@@ -320,6 +320,36 @@ MonoBehaviour:
     atkInterval: 0
     isGround: 0
     canRot: 0
+  boMonster:
+    level: 0
+    actorType: 0
+    atkType: 0
+    moveSpeed: 0
+    moveDir: {x: 0, y: 0, z: 0}
+    rotDir: {x: 0, y: 0, z: 0}
+    currentHp: 0
+    maxHp: 0
+    currentMp: 0
+    maxMp: 0
+    atk: 0
+    def: 0
+    atkRange: 0
+    atkInterval: 0
+    isGround: 0
+    canRot: 0
+    sdMonster:
+      index: 0
+      name: 
+      atkType: 0
+      moveSpeed: 0
+      detectionRange: 0
+      atkRange: 0
+      atkInterval: 0
+      maxHp: 0
+      maxMp: 0
+      atk: 0
+      def: 0
+      resourcePath: 
 --- !u!1 &5237796507687982415
 GameObject:
   m_ObjectHideFlags: 0

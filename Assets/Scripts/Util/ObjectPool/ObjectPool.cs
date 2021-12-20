@@ -31,6 +31,7 @@ namespace ProjectW.Util
         {
             obj.transform.SetParent(holder);
             obj.gameObject.SetActive(false);
+            obj.CanRecyle = true;
 
             Pool.Add(obj);
         }
@@ -81,7 +82,7 @@ namespace ProjectW.Util
             }
 
             // 파라미터로 받은 조건에 해당하는 객체가 존재하는지 검사
-            var recycleObj = Pool.Find(obj => pred(obj));
+            var recycleObj = Pool.Find(obj => pred(obj) && obj.CanRecyle);
 
             if (recycleObj == null)
                 return null;

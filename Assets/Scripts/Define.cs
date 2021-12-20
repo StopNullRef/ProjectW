@@ -58,8 +58,26 @@ namespace ProjectW.Define
         /// 액터의 일반공격 타입
         /// </summary>
         public enum AttackType { Normal, Projectile, }
+    }
 
-
+    public class Monster
+    {
+        /// <summary>
+        /// 최소 몬스터 스폰 수
+        /// </summary>
+        public const int MinSpawnCnt = 1;
+        /// <summary>
+        /// 최대 몬스터 스폰 수
+        /// </summary>
+        public const int MaxSpawnCnt = 5;
+        /// <summary>
+        /// 다음 스폰까지의 최소 시간
+        /// </summary>
+        public const float MinSpawnTime = 10f;
+        /// <summary>
+        /// 다음 스폰까지의 최대 시간
+        /// </summary>
+        public const float MaxSpawnTime = 20f;
     }
 
     public class StaticData

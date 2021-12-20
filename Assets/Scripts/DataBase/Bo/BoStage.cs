@@ -19,6 +19,16 @@ namespace ProjectW.DB
         /// 플레이어가 위치한 좌표
         /// </summary>
         public Vector3 prevPos;
+
+        /// <summary>
+        /// 이전 몬스터 스폰 시간
+        /// </summary>
+        public float prevSpawnTime;
+        /// <summary>
+        /// 몬스터 스폰 체크 시간
+        /// </summary>
+        public float spawnCheckTime;
+
         /// <summary>
         /// 플레이어가 현재/마지막으로 위치한 스테이지의 기획데이터 (없다면 시작마을로 설정)
         /// </summary>
