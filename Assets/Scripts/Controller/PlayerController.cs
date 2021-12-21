@@ -116,7 +116,7 @@ namespace ProjectW.Controller
 
         private void OnDownMouseLeft()
         {
-
+            PlayerCharacter.SetState(Define.Actor.State.Attack);
         }
 
         private void OnDownMouseRight()

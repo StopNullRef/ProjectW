@@ -1,4 +1,5 @@
-﻿using ProjectW.DB;
+﻿using ProjectW.Controller;
+using ProjectW.DB;
 using UnityEngine;
 
 namespace ProjectW.Object
@@ -26,6 +27,8 @@ namespace ProjectW.Object
         protected Rigidbody rig;
         protected Animator anim;
 
+        protected AttackController attackController;
+
         /// <summary>
         /// 액터 초기화 기능
         /// 초기화 시 외부에서 boActor 데이터를 받는다.
@@ -34,6 +37,13 @@ namespace ProjectW.Object
         public virtual void Initialize(BoActor boActor)
         {
             this.boActor = boActor;
+
+            // 어택컨트롤러 객체가 존재하지 않는다면 어택컨트롤러 컴포넌트 추가
+            // 존재한다면 그대로 사용
+            attackController ??= gameObject.AddComponent<AttackController>();
+            // 위의 과정을 통해 결과적으로 무조건 어택컨트롤러 객체는 존재하게 됨
+            // 어택컨트롤러 초기화 (이 때 공격자는 액터 자기 자신)
+            attackController.Initialize(this);
         }
 
         protected virtual void Start()
@@ -62,6 +72,13 @@ namespace ProjectW.Object
         /// </summary>
         public virtual void ActorUpdate()
         {
+            attackController.AttackIntervalUpdate();
+            attackController.CheckAttack();
+
+            if(State == State.Attack)
+            {
+                return;
+            }
             MoveUpdate();
         }
 
@@ -77,9 +94,10 @@ namespace ProjectW.Object
         /// <param name="state">변경하고자 하는 상태</param>
         public virtual void SetState(State state)
         {
+            // 상태 변경 전에 이전 상태를 담아누다.
+            var prevState = State;
             State = state;
 
-            anim.SetInteger("state", (int)State);
 
             // 상태 변경 후 변경된 상태에 따른 처리를 switch/case로 검사하여 실행
             // 액터에서 파생 객체들이 공통으로 갖는 상태만을 처리한다.
@@ -91,10 +109,61 @@ namespace ProjectW.Object
                 case State.Walk:
                     break;
                 case State.Attack:
+                    if (attackController.isCoolTime)
+                    {
+                        State = prevState;
+                        return;
+                    }
+
+                    OnAttack();
                     break;
                 case State.Dead:
                     break;
             }
+
+            anim.SetInteger("state", (int)State);
         }
+
+        /// <summary>
+        /// 액터의 상태를 공격 상태로 변경 시 한 번 호출
+        /// </summary>
+        protected virtual void OnAttack()
+        {
+            attackController.canCheckCoolTime = false;
+            attackController.isCoolTime = true;
+        }
+
+
+        #region Animation Event (애니메이션 실행 중 특정시점에 실행시킬 메서드들)
+        /// <summary>
+        /// 공격 모션 중에 타점(근접공격) 또는 발사체를 발사하는 시점(원거리공격)에 호출될 이벤트
+        /// -> 실제 공격 시점에 타겟에 대한 데미지 연산을 하기 위해
+        /// </summary>
+        public virtual void OnAttckHit()
+        {
+            attackController.OnAttack();
+        }
+
+        /// <summary>
+        /// 공격 모션 중에 모션의 마지막에 호출될 이벤트
+        /// -> 공격 모션이 모두 실행된 후 공격 쿨타임을 체크하기 위해
+        /// 공격 모션이 끝까지 실행된 후 상태를 대기로 변경하기 위해
+        /// </summary>
+        public virtual void OnAttackEnd()
+        {
+            attackController.canCheckCoolTime = true;
+            SetState(State.Idle); 
+        }
+
+        /// <summary>
+        /// 사망 모션 중에 모션의 마지막에 호출될 이벤트
+        /// -> 사망 애니메이션이 모두 실행된 후 객체를 제거하기 위해
+        /// </summary>
+        public virtual void OnDeadEnd()
+        {
+
+        }
+
+        #endregion
     }
 }
