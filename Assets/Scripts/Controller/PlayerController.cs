@@ -40,6 +40,7 @@ namespace ProjectW.Controller
             character.transform.SetParent(transform);
             // 내가 사용할 캐릭터에게 플레이어 태그를 부여
             character.tag = "Player";
+            character.gameObject.layer = LayerMask.NameToLayer("Player");
 
             PlayerCharacter = character;
 

@@ -78,6 +78,14 @@ namespace ProjectW.Define
         /// 다음 스폰까지의 최대 시간
         /// </summary>
         public const float MaxSpawnTime = 20f;
+        /// <summary>
+        /// 정찰 후 최소 대기 시간
+        /// </summary>
+        public const float MinPatrolWaitTime = 1f;
+        /// <summary>
+        /// 정찰 후 최대 대기 시간
+        /// </summary>
+        public const float MaxPatrolwaitTime = 3f;
     }
 
     public class StaticData

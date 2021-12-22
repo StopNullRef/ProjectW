@@ -371,11 +371,21 @@ namespace ProjectW
         /// </summary>
         /// <param name="monsterindex"></param>
         /// <returns></returns>
-        public Vector3 GenRandPosInArea(int monsterindex)
+        public Vector3 GetRandPosInArea(int monsterindex)
         {
             var sdStage = GameManager.User.boStage.sdStage;
 
-            int index = sdStage.genMonsters.Where(_ => _ == monsterindex).SingleOrDefault();
+            //int index = sdStage.genMonsters.Where(_ => _ == monsterindex).SingleOrDefault();
+
+            var index = -1;
+            for(int i =0; i< sdStage.genMonsters.Length; i++)
+            {
+                if(sdStage.genMonsters[i] == monsterindex)
+                {
+                    index = i;
+                    break;
+                }
+            }
 
             // 스폰 영역 내에서 랜덤하게 스폰할 위치를 뽑음
             var bounds = spawnAreaBounds[sdStage.spawnArea[index]];
