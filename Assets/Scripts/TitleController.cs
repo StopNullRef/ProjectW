@@ -75,7 +75,7 @@ namespace ProjectW
         {
             // 현재 페이즈에 대한 열거형을 문자열로 변경하여 로딩 상태를 나타내는 텍스트에 전달
             uiTitle.SetLoadStateDescription(phase.ToString());
-            
+
             // 로딩게이지 ui의 fillAmount가 아직 실제 로딩 게이지 퍼센트로 값이 끝까지 보간이 안된 상태에서
             // 실제 로딩 페이즈는 다음 페이즈로 변경이 이루어진다면??
             // 이 때 문제가 발생함
@@ -87,7 +87,7 @@ namespace ProjectW
             // 넘겨서 코루틴을 다시 시작시킨다.
 
             // 로딩 게이지 애니메이션 처리에 사용될 코루틴이 존재한다면
-            if(loadGaugeUpdateCoroutine != null)
+            if (loadGaugeUpdateCoroutine != null)
             {
                 // 코루틴을 강제로 멈추로 null로 초기화시킨다.
                 StopCoroutine(loadGaugeUpdateCoroutine);
@@ -109,41 +109,34 @@ namespace ProjectW
             switch (phase)
             {
                 case IntroPhase.Start:
-                    LoadComplete = true;
                     break;
                 case IntroPhase.ApplicationSetting:
                     GameManager.Instance.OnApplicationSetting();
-                    LoadComplete = true;
                     break;
                 case IntroPhase.Server:
                     DummyServer.Instance.Initialize();
                     ServerManager.Instance.Initialize();
-                    LoadComplete = true;
                     break;
                 case IntroPhase.StaticData:
                     GameManager.SD.Initialize();
-                    LoadComplete = true;
                     break;
                 case IntroPhase.UserData:
                     new LoginHandler().Connect();
-                    LoadComplete = true;
                     break;
                 case IntroPhase.Resource:
                     ResourceManager.Instance.Initialize();
-                    LoadComplete = true;
                     break;
                 case IntroPhase.UI:
-
-                    LoadComplete = true;
+                    UIWindowManager.Instance.Initilaize();
                     break;
                 case IntroPhase.Comepelte:
                     allLoaded = true;
                     var ingameManager = InGameManager.Instance;
                     GameManager.Instance.LoadScene(SceneType.Ingame, ingameManager.ChangeStage(), ingameManager.OnChangeStageComplete);
-                    LoadComplete = true;
-
                     break;
             }
+
+            LoadComplete = true;
         }
 
         /// <summary>

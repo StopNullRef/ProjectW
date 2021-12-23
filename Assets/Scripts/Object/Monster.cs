@@ -227,5 +227,15 @@ namespace ProjectW.Object
                 attackController.canAtk = false;
             }
         }
+
+        /// <summary>
+        /// 몬스터의 사망 모션이 종료됐을 때, 발생시킬 이벤트
+        /// </summary>
+        public override void OnDeadEnd()
+        {
+            // 몬스터 풀에 몬스터를 다시 넣음
+            ObjectPoolManager.Instance.GetPool<Monster>().Return(this);
+        }
+
     }
 }
