@@ -31,7 +31,7 @@ namespace ProjectW.Util
         {
             obj.transform.SetParent(holder);
             obj.gameObject.SetActive(false);
-            obj.CanRecyle = true;
+            obj.CanRecycle = true;
 
             Pool.Add(obj);
         }
@@ -48,7 +48,7 @@ namespace ProjectW.Util
         {
             obj.transform.SetParent(holder);
             obj.gameObject.SetActive(false);
-            obj.CanRecyle = true;
+            obj.CanRecycle = true;
         }
 
         /// <summary>
@@ -57,10 +57,10 @@ namespace ProjectW.Util
         /// <param name="pred">풀 내에서 재사용 객체를 특정 조건으로 검사하고자 할 시
         /// 해당 조건을 갖는 대리자(method)</param>
         /// <returns></returns>
-        public T GetObj(Func<T,bool>pred)
+        public T GetObj(Func<T,bool>pred = null)
         {
             // 풀 내에서 재사용 가능한 객체가 존재하는지 검사
-            if(!(Pool.Find(obj => obj.CanRecyle) != null))
+            if(!(Pool.Find(obj => obj.CanRecycle) != null))
             {
                 // 재사용 가능한 객체가 없을 경우 들어옴
 
@@ -68,7 +68,9 @@ namespace ProjectW.Util
                 // 해당 객체를 찾아서 새로운 객체를 생성
                 // 없을 경우 null을 반환
 
-                var protoObj = Pool.Find(obj => pred(obj));
+                var protoObj = pred == null ?
+                    (Pool.Count > 0 ? Pool[0]:null):
+                    Pool.Find(obj => pred(obj));
 
                 if (protoObj != null)
                 {
@@ -82,13 +84,13 @@ namespace ProjectW.Util
             }
 
             // 파라미터로 받은 조건에 해당하는 객체가 존재하는지 검사
-            var recycleObj = Pool.Find(obj => pred(obj) && obj.CanRecyle);
+            var recycleObj = pred == null ?Pool.Find(obj=>obj.CanRecycle) : Pool.Find(obj => pred(obj) && obj.CanRecycle);
 
             if (recycleObj == null)
                 return null;
 
             // 해당 객체를 반환해서 재사용할 것이므로, 더이상 재사용할 수 없게 재사용 불가능 상태로 변경
-            recycleObj.CanRecyle = false;
+            recycleObj.CanRecycle = false;
 
             return recycleObj;
         }

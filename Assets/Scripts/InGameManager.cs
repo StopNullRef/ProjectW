@@ -3,6 +3,7 @@ using ProjectW.DB;
 using ProjectW.Define;
 using ProjectW.Object;
 using ProjectW.Resource;
+using ProjectW.UI;
 using ProjectW.Util;
 using System;
 using System.Collections;
@@ -61,6 +62,7 @@ namespace ProjectW
                 // actor 타입이 몬스터와 같다면 임시로 actor를 monster라는 임시 변수로 사용
                 case var monster when actor.boActor.actorType == Define.Actor.Type.Monster:
                     Monsters.Add(monster);
+                    UIWindowManager.Instance.GetWindow<UIIngame>().AddHpBar(monster);
                     break;
                 case var character when actor.boActor.actorType == Define.Actor.Type.Character:
                     Characters.Add(character);
@@ -200,6 +202,8 @@ namespace ProjectW
         /// </summary>
         public void OnChangeStageComplete()
         {
+            UIWindowManager.Instance.GetWindow<UIIngame>().Clear();
+
             InitSpawnTime();
 
             SpawnCharacter();
@@ -394,5 +398,6 @@ namespace ProjectW
 
             return bounds.center + new Vector3(spawnPosX, 0, spawnPosZ);
         }
+
     }
 }

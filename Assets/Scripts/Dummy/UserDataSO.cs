@@ -16,5 +16,6 @@ namespace ProjectW.Dummy
         public DtoAccount dtoAccount;
         public DtoStage dtoStage;
         public DtoCharacter dtoCharacter;
+        public DtoItem dtoItem;
     }
 }

@@ -23,6 +23,6 @@ namespace ProjectW.Util
         /// 오브젝트가 재사용될 수 있음을 나타내는 프로퍼티
         /// 오브젝트 풀에서 꺼내서 사용할 수 있는 상태인지를 나타내는 값
         /// </summary>
-        bool CanRecyle { get; set; }
+        bool CanRecycle { get; set; }
     }
 }

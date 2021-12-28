@@ -21,6 +21,16 @@ namespace ProjectW.Controller
     public class PlayerController : MonoBehaviour
     {
         /// <summary>
+        /// 플레이어가 적을 포인팅하고 있는지에 대한 필드
+        /// </summary>
+        public bool HasPointTarget { get; set; }
+
+        /// <summary>
+        /// 포인팅하고 있는 타겟에 대한 트랜스폼 참조
+        /// </summary>
+        private Transform pointingTarget;
+
+        /// <summary>
         /// 플레이어 캐릭터의 인스턴스 참조
         /// </summary>
         public Character PlayerCharacter { get; private set; }
@@ -66,7 +76,26 @@ namespace ProjectW.Controller
                 return;
             }
 
+            CheckMousePointTarget();
             InputUpdate();
+        }
+
+        /// <summary>
+        /// 플레이어가 마우스로 특정 타겟을 포인팅하는지 대한 연산
+        /// </summary>
+        private void CheckMousePointTarget()
+        {
+            // 현재 씬에서 사용하는 카메라에서 스크린 좌표계의 마우스 위치로 레이 생성
+            var ray = CameraController.Cam.ScreenPointToRay(UnityEngine.Input.mousePosition);
+
+            // 생성한 레이를 통해 해당 레이 방향에 몬스터가 존재하는지 체크
+            var hits = Physics.RaycastAll(ray, 1000f, 1 << LayerMask.NameToLayer("Monster"));
+
+            // 레이캐스팅의 결과가 담긴 배열의 길이가 0이 아니라면 타겟 존재
+            HasPointTarget = hits.Length != 0;
+            // 추후 포인팅한 타겟을 공격 시, 캐릭터를 타겟쪽으로 회전시키기 위해 타겟의 트랜스폼을 받음
+            pointingTarget = HasPointTarget ? hits[0].transform : null;
+
         }
 
         private void InputUpdate()
@@ -117,6 +146,20 @@ namespace ProjectW.Controller
 
         private void OnDownMouseLeft()
         {
+            // 마우스가 가리키는 객체(몬스터)의 정보가 존재한다면
+            if(pointingTarget != null)
+            {
+                // y축 회전만 실행하고, 나머지 축은 기존 회전 값을 유지할 수 있도록
+                var origintRot = PlayerCharacter.transform.eulerAngles;
+                // 플레이어가 타겟의 트랜스폼을 바라보도록
+                PlayerCharacter.transform.LookAt(pointingTarget);
+                // 변경된 회전값에서 y축 값은 유지한 채, x,z축 회전 값을 원래 회전값으로 변경
+                var newRot = PlayerCharacter.transform.eulerAngles;
+                newRot.x = origintRot.x;
+                newRot.z = origintRot.z;
+                PlayerCharacter.transform.eulerAngles = newRot;
+            }
+
             PlayerCharacter.SetState(Define.Actor.State.Attack);
         }
 

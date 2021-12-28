@@ -20,7 +20,7 @@ namespace ProjectW.Object
         private NavMeshPath path;
 
         // 재사용 가능 여부를 나타내는 프로퍼티, 처음 생성 시 재사용 가능한 상태로 설정
-        public bool CanRecyle { get; set; } = true;
+        public bool CanRecycle { get; set; } = true;
 
         public override void Initialize(BoActor boActor)
         {

@@ -45,11 +45,11 @@ namespace ProjectW.Controller
         /// 미리 이 곳에서 참조를 받아두고 정적 필드에 담아둠으로써
         /// 편리하게 접글할 수 있도록 한다
         /// </summary>
-        public static Camera cam { get; private set; }
+        public static Camera Cam { get; private set; }
 
         private void Start()
         {
-            cam = GetComponent<Camera>();
+            Cam = GetComponent<Camera>();
         }
 
         /// <summary>

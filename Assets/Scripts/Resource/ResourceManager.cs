@@ -1,4 +1,5 @@
-﻿using ProjectW.Util;
+﻿using ProjectW.UI;
+using ProjectW.Util;
 using System;
 using UnityEngine;
 
@@ -14,7 +15,7 @@ namespace ProjectW.Resource
         /// </summary>
         public void Initialize()
         {
-
+            LoadAllPrefabs();
         }
 
         /// <summary>
@@ -52,6 +53,14 @@ namespace ProjectW.Resource
 
             // 위의 작업이 모두 끝난 후 추가적으로 실행시키고자 하는 기능이 있다면 실행
             complete?.Invoke();
+        }
+
+        /// <summary>
+        /// 인게임에서 사용할 모든 프리팹을 부르는 기능
+        /// </summary>
+        private void LoadAllPrefabs()
+        {
+            LoadPoolableObject<HPBar>("Prefabs/UI/HPBar", 10);
         }
     }
 }

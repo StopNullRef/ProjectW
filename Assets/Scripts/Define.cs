@@ -88,6 +88,11 @@ namespace ProjectW.Define
         public const float MaxPatrolwaitTime = 3f;
     }
 
+    public class Item
+    {
+        public enum ItemType { Equipment,Expendables, Quest, Etc}
+    }
+
     public class StaticData
     {
         public const string SDPath = "Assets/StaticData";

@@ -167,11 +167,11 @@ namespace ProjectW.UI
             // 인스턴스 딕셔너리에 키가 없다면 전체 딕셔너리에서 UW 인스턴스를 가져와
             // T타입으로 캐스팅 후 등록
 
-            if(!cachedTotalUIWindows.ContainsKey(key))
+            if(!cachedInstance.ContainsKey(key))
             {
                 cachedInstance.Add(key, (T)Convert.ChangeType(cachedTotalUIWindows[key], typeof(T)));
             }
-            else if (cachedInstance[key].Equals(null))
+            else if (!cachedInstance.ContainsKey(key) || cachedInstance[key].Equals(null))
             {
                 cachedInstance[key] = (T)Convert.ChangeType(cachedTotalUIWindows[key], typeof(T));
             }

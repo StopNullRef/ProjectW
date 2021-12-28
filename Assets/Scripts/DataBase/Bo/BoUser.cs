@@ -15,5 +15,6 @@ namespace ProjectW.DB
         public BoAccount boAccount;
         public BoStage boStage;
         public BoCharacter boCharacter;
+        public List<BoItem> boItems;
     }
 }
