@@ -1,5 +1,6 @@
 ﻿
 using ProjectW.DB;
+using ProjectW.Resource;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -18,11 +19,13 @@ namespace ProjectW.UI
         public void Initialize()
         {
             // 아이템 수량 필드가 null 이라면 자식객체 (본인포함) 중에 텍스트메쉬프로 컴포넌트를 찾아온다
-            itemAmount ??= GetComponent<TextMeshProUGUI>();
+            itemAmount ??= GetComponentInChildren<TextMeshProUGUI>();
             // 아이템 이미지 필드가 null 이라면 0번째(첫번째) 자식에 접근하여 이미지 컴포넌트를 찾아온다.
             // -> 직접적으로 0번째에 접근하는 이유, ItemSlot 컴포넌트를 붙일 객체도 이미지 컴포넌트를
             // 가지고 있으므로, 명확하게 첫번째 자식(아이템이미지)에 접근하여 컴포넌트를 가져옴
             ItemImage ??= transform.GetChild(0).GetComponent<Image>();
+
+            SetSlot(null);
         }
 
         /// <summary>
@@ -47,9 +50,17 @@ namespace ProjectW.UI
             {
                 itemAmount.text = boItem.amount.ToString();
                 //스프라이트 부르는 기능 하고나서 한다
-                //ItemImage.sprite = 
+                ItemImage.sprite = SpriteLoader.GetSprite(Define.Resource.AtlasType.ItemAtlas, boItem.sdItem.resourcePath);
                 ItemImage.color = Color.white;
             }
+        }
+
+        /// <summary>
+        /// 동일한 아이템을 먹었을 시, 변경된 수량을 UI 상에 업데이트
+        /// </summary>
+        public void AmountUpdate()
+        {
+            itemAmount.text = BoItem.amount.ToString();
         }
     }
 }

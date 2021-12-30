@@ -1,7 +1,9 @@
-﻿using ProjectW.UI;
+﻿using ProjectW.Object;
+using ProjectW.UI;
 using ProjectW.Util;
 using System;
 using UnityEngine;
+using UnityEngine.U2D;
 
 namespace ProjectW.Resource
 {
@@ -16,6 +18,7 @@ namespace ProjectW.Resource
         public void Initialize()
         {
             LoadAllPrefabs();
+            LoadAllAtlas();
         }
 
         /// <summary>
@@ -61,6 +64,23 @@ namespace ProjectW.Resource
         private void LoadAllPrefabs()
         {
             LoadPoolableObject<HPBar>("Prefabs/UI/HPBar", 10);
+            LoadPoolableObject<ItemBase>("Prefabs/UI/Item", 10);
+        }
+
+        /// <summary>
+        /// Resources 폴더 내의 모든 아틀라스를 불러와 스프라이트 로더에 등록시키는 기능
+        /// </summary>
+        private void LoadAllAtlas()
+        {
+            // 현재는 한 번에 모든 아틀라스를 불러와서 스프라이트 로더에 등록시키는데
+            // 최적화한다면...
+
+            // ex) 아틀라스가 씬 별로 존재한다.
+            // 씬 변경 시마다 변경된 씬에 맞는 아틀라스만을 불러오도록 수정
+
+            // Resources/Sprite 폴더 경로에 있는 SpriteAtlas 타입의 에셋을 모두 불러온다.
+            var atlases = Resources.LoadAll<SpriteAtlas>("Sprite");
+            SpriteLoader.SetAtlas(atlases);
         }
     }
 }

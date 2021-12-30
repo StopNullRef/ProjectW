@@ -1,8 +1,10 @@
 using ProjectW.DB;
 using ProjectW.Object;
+using ProjectW.UI;
 using ProjectW.Util;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -235,6 +237,28 @@ namespace ProjectW.Object
         {
             // 몬스터 풀에 몬스터를 다시 넣음
             ObjectPoolManager.Instance.GetPool<Monster>().Return(this);
+
+            // 여기서 아이템 드랍해주기
+            ItemDrop();
+        }
+
+        public void ItemDrop()
+        {
+           var uiIngame = UIWindowManager.Instance.GetWindow<UIIngame>();
+
+            var sdMonster = boMonster.sdMonster;
+            //아이템 드랍 로직 적기
+
+            for (int i=0; i<boMonster.sdMonster.dropItemRef.Length;i++)
+            {
+                if(Random.Range(1,100) <= (sdMonster.dropItemPer[i]*100))
+                {
+                    uiIngame.AddItem(this, new BoItem(GameManager.SD.sdItems.Where(_ => _.index == sdMonster.dropItemRef[i]).SingleOrDefault()));
+                }
+            }
+
+            //uiIngame.AddItem(this,);
+
         }
 
     }

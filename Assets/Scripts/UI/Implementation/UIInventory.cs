@@ -16,7 +16,7 @@ namespace ProjectW.UI
         /// <summary>
         /// 인벤토리 상의 모든 아이템슬롯 객체 참조를 갖는 컬렉션
         /// </summary>
-        private List<ItemSlot> itemSlots = new List<ItemSlot>();
+        public List<ItemSlot> itemSlots = new List<ItemSlot>();
 
         public override void Start()
         {
@@ -38,7 +38,18 @@ namespace ProjectW.UI
             InitAllSlot();
 
             // 유저가 가지고 있는 아이템 데이터를 인벤토리 슬롯에 전부 갱신해준다.
+            InventoryUpdate();
+        }
 
+        private void Update()
+        {
+            if(Input.GetKeyDown(KeyCode.I))
+            {
+                if (isOpen)
+                    Close();
+                else
+                    Open();
+            }
         }
 
         private void InitAllSlot()
@@ -75,6 +86,12 @@ namespace ProjectW.UI
             // 클라에서 몬스터를 잡고 루팅한 아이템 데이터
             for(int i =0; i< itemSlots.Count; i++)
             {
+                // TODO 여기서부터 만들기 아이템 드랍은되는데 갯수 추가해주는게 안됨
+                if(itemSlots[i].BoItem.sdItem.index == boItem.sdItem.index)
+                {
+                    itemSlots[i].BoItem.amount++;
+                }
+
                 // 비어있는 슬롯(아이템데이터가 존재하지 않는 슬롯)이라면
                 if(itemSlots[i].BoItem == null)
                 {
@@ -83,6 +100,25 @@ namespace ProjectW.UI
                     break;
                 }
             }
+        }
+
+        /// <summary>
+        /// 이미 가지고 있는 아이템 수량 변경 시 ui 업데이트
+        /// </summary>
+        /// <param name="boItem"></param>
+        public void AmountUpdate(BoItem boItem)
+        {
+            itemSlots[boItem.slotIndex].AmountUpdate();
+        }
+
+        /// <summary>
+        /// 유저의 아이템 정보를 받아 아이템 슬롯에 연결해주는 기능
+        /// </summary>
+        private void InventoryUpdate()
+        {
+            var userItems = GameManager.User.boItems;
+            for (int i = 0; i < userItems.Count; i++)
+                AddItem(userItems[i]);
         }
     }
 }

@@ -33,6 +33,17 @@ namespace ProjectW.SD
         public float maxMp;
         public float atk;
         public float def;
+
+        /// <summary>
+        /// 해당 몬스터 사망 시 드랍할 수 있는 아이템들의 기획데이터 상의 인덱스 값들
+        /// </summary>
+        public int[] dropItemRef;
+
+        /// <summary>
+        /// 해당 몬스터 사망 시 드랍할 수 있는 아이템들의 확률 (dropItemRef와 연동되므로 배열의 길이는 동일하다)
+        /// </summary>
+        public float[] dropItemPer;
+
         /// <summary>
         /// 몬스터 프리팹 경로
         /// </summary>

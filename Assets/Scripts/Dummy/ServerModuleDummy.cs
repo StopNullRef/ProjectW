@@ -39,5 +39,10 @@ namespace ProjectW.Dummy
         {
             responseHandler.HandleSuccess(SerializationUtil.ToJSon(DummyServer.Instance.userData.dtoCharacter));
         }
+
+        public void GetItem(int uniqueId, ResponseHandler<DtoItem> responseHandler)
+        {
+            responseHandler.HandleSuccess(SerializationUtil.ToJSon(DummyServer.Instance.userData.dtoItem));
+        }
     }
 }

@@ -35,6 +35,8 @@ namespace ProjectW
         /// </summary>
         private Transform monsterHolder;
 
+        private Transform itemHolder;
+
         /// <summary>
         /// 현재 스테이지 인스턴스를 들고 있을 필드
         /// </summary>
@@ -334,6 +336,7 @@ namespace ProjectW
             }
 
         }
+
 
         /// <summary>
         /// 몬스터 스폰시간 초기화

@@ -1,5 +1,8 @@
 ﻿using ProjectW.Controller;
+using ProjectW.DB;
 using ProjectW.Object;
+using ProjectW.Resource;
+using ProjectW.SD;
 using ProjectW.Util;
 using System;
 using System.Collections.Generic;
@@ -30,6 +33,8 @@ namespace ProjectW.UI
 
         private List<HPBar> monsterHpBars = new List<HPBar>();
 
+        private List<ItemBase> items = new List<ItemBase>();
+
         public Canvas worldUICanvas;
 
         private void Update()
@@ -48,7 +53,7 @@ namespace ProjectW.UI
 
             // 월드 공간의 UI는 모두 월드 UI 캔버스에 존재하므로
             // 캔버스에 접근하여 자식 객체들을 전부 카메라를 바라보게 만듬
-            for(int i=0; i<worldUICanvas.transform.childCount;i++)
+            for (int i = 0; i < worldUICanvas.transform.childCount; i++)
             {
                 // 하이라키상의 자식 객체를 순서대로 하나씩 가져옴
                 var child = worldUICanvas.transform.GetChild(i);
@@ -65,7 +70,7 @@ namespace ProjectW.UI
 
         private void CursorUpdate()
         {
-            Cursor.SetCursor(playerController.HasPointTarget ? targetPointerCursor : defaultCursor,Vector2.zero,CursorMode.Auto);
+            Cursor.SetCursor(playerController.HasPointTarget ? targetPointerCursor : defaultCursor, Vector2.zero, CursorMode.Auto);
         }
 
         private void BubbleGaugeUpdate()
@@ -84,9 +89,9 @@ namespace ProjectW.UI
             Progress(playerHpBubbles, hpGauge);
             Progress(playerMpBubbles, mpGauge);
 
-            void Progress(List<BubbleGauge> list,float value)
+            void Progress(List<BubbleGauge> list, float value)
             {
-                for(int i =0; i<list.Count; i++)
+                for (int i = 0; i < list.Count; i++)
                 {
                     list[i].SetGauge(value);
                 }
@@ -95,7 +100,7 @@ namespace ProjectW.UI
 
         private void HpBarUpdate()
         {
-            for(int i =0; i<monsterHpBars.Count; i++)
+            for (int i = 0; i < monsterHpBars.Count; i++)
                 monsterHpBars[i].HpBarUpdate();
         }
 
@@ -116,6 +121,17 @@ namespace ProjectW.UI
             monsterHpBars.Add(hpBar);
         }
 
+        public void AddItem(Monster monster,BoItem itemInfo)
+        {
+            var item = ObjectPoolManager.Instance.GetPool<ItemBase>().GetObj();
+            item.DropItem = itemInfo;
+            item.transform.SetParent(UIWindowManager.Instance.GetWindow<UIIngame>().worldUICanvas.transform);
+            item.Initialize(monster);
+            item.itemImage.sprite = SpriteLoader.GetSprite(Define.Resource.AtlasType.ItemAtlas, itemInfo.sdItem.resourcePath);
+            item.gameObject.SetActive(true);
+            items.Add(item);
+        }
+
         /// <summary>
         /// 스테이지 전환 시 현재 스테이지에 있는 hpBar 객체를 전부 푸렝 반환
         /// </summary>
@@ -123,7 +139,7 @@ namespace ProjectW.UI
         {
             var hpBarPool = ObjectPoolManager.Instance.GetPool<HPBar>();
 
-            for(int i=0; i< monsterHpBars.Count; i++)
+            for (int i = 0; i < monsterHpBars.Count; i++)
             {
                 hpBarPool.Return(monsterHpBars[i]);
             }

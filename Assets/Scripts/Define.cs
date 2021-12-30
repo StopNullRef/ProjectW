@@ -100,4 +100,9 @@ namespace ProjectW.Define
         public const string SDJsonPath = "Assets/StaticData/Json";
     }
 
+    public class Resource
+    {
+        public enum AtlasType { ItemAtlas, }
+    }
+
 }

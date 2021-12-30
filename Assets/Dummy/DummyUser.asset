@@ -29,3 +29,12 @@ MonoBehaviour:
     errorMessage: 
     index: 1000
     level: 1
+  dtoItem:
+    errorCode: 0
+    errorMessage: 
+    items:
+    - slotIndex: 0
+      index: 1000
+      amount: 1
+      reinforceValue: 0
+      isEquip: 0

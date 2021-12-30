@@ -30,7 +30,7 @@ namespace ProjectW.DB
     {
         public int slotIndex; // 아이템의 인벤토리 상의 인덱스
         public int index; // 아이템의 기획데이터 상의 인덱스
-        public int amoint; // 아이템 수량
+        public int amount; // 아이템 수량
         public int reinforceValue; // 장비일 시 강화수치, 아니라면 사용하지 않음
         public bool isEquip; // 장비라면 착용중인지, 아니라면 사용하지 않음
 
@@ -44,7 +44,7 @@ namespace ProjectW.DB
         {
             slotIndex = boItem.slotIndex;
             index = boItem.sdItem.index;
-            amoint = boItem.amount;
+            amount = boItem.amount;
 
             // boItem의 타입이 장비 데이터라면
             if(boItem is BoEquipment)

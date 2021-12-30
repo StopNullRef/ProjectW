@@ -39,5 +39,12 @@ namespace ProjectW.Network
         /// <param name="uniqueId"></param>
         /// <param name="responseHandler"></param>
         void GetCharacter(int uniqueId, ResponseHandler<DtoCharacter> responseHandler);
+
+        /// <summary>
+        /// 서버에 유저의 전체 아이템 정보를 요청하는 메서드
+        /// </summary>
+        /// <param name="uniqueId"></param>
+        /// <param name="responseHandler"></param>
+        void GetItem(int uniqueId, ResponseHandler<DtoItem> responseHandler);
     }
 }
